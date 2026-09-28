@@ -317,7 +317,7 @@ Route::middleware([
         });
 
         /* --- Finance (no name prefix: the pages use invoices.*, estimates.*, expenses.*) --- */
-        Route::prefix('finance')->group(function () {
+        Route::prefix('finance')->middleware('workspace.role:admin,manager')->group(function () {
             Route::get('/overview', [FinanceController::class, 'overview'])->name('finance.overview');
 
             // Invoices
@@ -374,7 +374,7 @@ Route::middleware([
         });
 
         /* --- Credit notes --- */
-        Route::prefix('credit-notes')->name('credit-notes.')->group(function () {
+        Route::prefix('credit-notes')->name('credit-notes.')->middleware('workspace.role:admin,manager')->group(function () {
             Route::get('/', [CreditNoteController::class, 'index'])->name('index');
             Route::post('/', [CreditNoteController::class, 'store'])->name('store');
             Route::get('/{creditNote}/pdf', [CreditNoteController::class, 'pdf'])->name('pdf');
@@ -448,7 +448,7 @@ Route::middleware([
         });
 
         /* --- HR --- */
-        Route::prefix('hr')->group(function () {
+        Route::prefix('hr')->middleware('workspace.role:admin,manager')->group(function () {
             // Team
             Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
             Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
@@ -505,9 +505,9 @@ Route::middleware([
             Route::post('/{conversation}/read', [MessageController::class, 'markRead'])->name('read');
         });
 
-        /* --- Raporty --- */
-        Route::prefix('reports')->name('reports.')->group(function () {
-            Route::get('/', fn () => redirect()->route('tenant.manager.reports.time'))->name('index');
+        /* --- Reports --- */
+        Route::prefix('reports')->name('reports.')->middleware('workspace.role:admin,manager')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
             Route::get('/time', [ReportTimeController::class, 'index'])->name('time');
             Route::get('/finance', [ReportFinanceController::class, 'index'])->name('finance');
             Route::get('/projects', [ReportProjectController::class, 'index'])->name('projects');
@@ -532,7 +532,7 @@ Route::middleware([
         Route::post('/push-subscriptions', [PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
 
         /* --- Ustawienia --- */
-        Route::prefix('settings')->name('settings.')->group(function () {
+        Route::prefix('settings')->name('settings.')->middleware('workspace.role:admin')->group(function () {
             Route::get('/', [SettingsController::class, 'index'])->name('index');
             Route::post('/upload', [SettingsController::class, 'upload'])->name('upload');
             Route::post('/role-permissions', [SettingsController::class, 'updateRolePermissions'])->name('role-permissions.update');

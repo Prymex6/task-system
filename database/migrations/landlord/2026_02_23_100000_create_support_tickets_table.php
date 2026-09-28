@@ -19,7 +19,7 @@ return new class extends Migration
             $table->index(['tenant_id', 'status']);
         });
 
-        Schema::create('ticket_messages', function (Blueprint $table) {
+        Schema::create('platform_ticket_messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ticket_id')->constrained('support_tickets')->cascadeOnDelete();
             $table->enum('author_type', ['tenant', 'admin']);
@@ -31,7 +31,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('ticket_messages');
+        Schema::dropIfExists('platform_ticket_messages');
         Schema::dropIfExists('support_tickets');
     }
 };
