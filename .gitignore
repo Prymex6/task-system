@@ -1,0 +1,64 @@
+# ── Laravel ───────────────────────────────────────────────────────
+*.log
+.env
+.env.backup
+.env.production
+.env.*.local
+/auth.json
+/storage/*.key
+/storage/pail
+/public/build
+/public/hot
+/public/storage
+/bootstrap/cache/*.php
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+# ── Dependencies ──────────────────────────────────────────────────
+/vendor
+/node_modules
+
+# ── Test artefacts ────────────────────────────────────────────────
+# Only the output of a run is ignored. The suite itself is part of the
+# project, so nothing here may match tests/ as a whole.
+/coverage
+.phpunit.result.cache
+/.phpunit.cache
+/tests/e2e/.output
+/tests/e2e/.report
+/tests/e2e/.auth
+/playwright-report
+/test-results
+
+# ── Local tooling ─────────────────────────────────────────────────
+/.claude
+
+# ── Databases ─────────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+/database/*.sqlite
+
+# ── Runtime data ──────────────────────────────────────────────────
+# Uploaded files and per-tenant folders are created while the app runs.
+# public/images holds the three assets that ship with it and stays.
+/storage/tenant*
+/public/tenants
+/public/uploads
+
+# ── IDE / editors ─────────────────────────────────────────────────
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+.DS_Store
+Thumbs.db
+.phpactor.json
+* copy.*
+
+# ── Local notes ───────────────────────────────────────────────────
+/docs
+/PLAN.md
