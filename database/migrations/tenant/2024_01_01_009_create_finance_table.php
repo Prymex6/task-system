@@ -32,7 +32,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Metody płatności
+        // Payment methods
         Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Faktury
+        // Invoices
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
@@ -93,7 +93,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Konfiguracja przypomnień
+        // Reminder schedule
         Schema::create('invoice_reminders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->constrained()->cascadeOnDelete();
@@ -104,7 +104,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Faktury korygujące
+        // Credit notes
         Schema::create('credit_notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->constrained()->cascadeOnDelete();
@@ -152,7 +152,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Faktury cykliczne
+        // Recurring invoices
         Schema::create('recurring_invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
@@ -167,7 +167,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Wydatki
+        // Expenses
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');

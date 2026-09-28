@@ -12,10 +12,10 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Demo seeder – tylko dla środowisk deweloperskich i testowych.
- * Tworzy przykładowe dane: staff, klientów, projekty, zadania.
+ * Demo data, for development and testing only.
+ * Creates sample staff, clients, projects and tasks.
  *
- * Użycie: php artisan tenants:run db:seed --option="class=TenantSeeder"
+ * Use: php artisan tenants:run db:seed --option="class=TenantSeeder"
  */
 class TenantSeeder extends Seeder
 {
@@ -158,7 +158,7 @@ class TenantSeeder extends Seeder
             return;
         }
 
-        // Statusy zadań
+        // Task statuses
         $statuses = [
             ['name' => 'Do zrobienia',  'color' => '#94a3b8', 'order' => 1, 'is_default' => true,  'is_closed' => false],
             ['name' => 'W trakcie',     'color' => '#3b82f6', 'order' => 2, 'is_default' => false, 'is_closed' => false],
@@ -187,7 +187,7 @@ class TenantSeeder extends Seeder
             ]
         );
 
-        // Dodaj członków projektu
+        // Put the sample staff on the project
         $project1->members()->syncWithoutDetaching([
             $owner->id => ['project_role' => 'project_manager'],
             $manager->id => ['project_role' => 'contributor'],

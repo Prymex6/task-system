@@ -114,7 +114,7 @@ class TicketController extends Controller
             }
         }
 
-        // Jeśli nie jest wewnętrzny, zmień status na in_progress
+        // A reply the client can see moves the ticket to in_progress
         if (!$validated['is_internal'] && $ticket->status === 'open') {
             $ticket->update(['status' => 'pending']);
         }

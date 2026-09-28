@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Osoby kontaktowe (mogą logować się do portalu klienta)
+        // Contacts, who may also sign in to the client portal
         Schema::create('client_contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained()->cascadeOnDelete();
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
         });
 
-        // Grupy klientów
+        // Client groups
         Schema::create('client_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');

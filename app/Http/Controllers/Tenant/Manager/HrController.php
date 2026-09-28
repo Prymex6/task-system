@@ -16,7 +16,7 @@ use Inertia\Inertia;
 
 class HrController extends Controller
 {
-    // ── Obecności ─────────────────────────────────────────────────────────────
+    // ── Attendance ────────────────────────────────────────────────────────────
 
     public function attendance(Request $request)
     {

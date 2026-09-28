@@ -26,7 +26,7 @@ class SetupE2ETestEnvironment extends Command
         // 1. Landlord: plany + super admin
         $this->call('db:seed', ['--class' => 'LandlordSeeder', '--force' => true]);
 
-        // 2. Znajdź tenanta na ecommerce.localhost
+        // 2. Find the tenant the e2e suite runs against
         $domain = 'ecommerce.localhost';
         $domainRecord = Domain::where('domain', $domain)->first();
 
@@ -63,10 +63,10 @@ class SetupE2ETestEnvironment extends Command
 
         tenancy()->initialize($tenant);
 
-        // 4. Wyczyść cache (limity rate-limiting)
+        // 4. Clear the cache so rate limits do not carry between runs
         $this->call('cache:clear');
 
-        // 5. Usuń dane stworzone przez poprzednie przebiegi e2e
+        // 5. Drop whatever an earlier run left behind
         DB::table('users')
             ->where('email', 'like', 'e2e.%@test.com')
             ->delete();

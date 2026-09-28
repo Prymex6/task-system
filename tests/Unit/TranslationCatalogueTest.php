@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * The scan is driven by call sites, not by language heuristics. Guessing which
  * literals are Polish by looking for diacritics misses "Status" and "Plan" and
- * flags "Fakturę" inside a comment; asking "what does __() get handed" cannot.
+ * and it flags prose sitting in a comment. Asking what __() is handed cannot.
  */
 class TranslationCatalogueTest extends TestCase
 {

@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sprawdza czy zalogowany użytkownik ma dostęp do projektu w route.
+ * Checks the signed-in user may open the project named in the route.
  *
- * Owner/Admin mają zawsze dostęp.
- * Manager/Member/Guest tylko jeśli są project_member.
+ * An owner or admin always may.
+ * Everybody else only if they are on the project.
  *
- * Użycie: ->middleware('project.access')
+ * Use: ->middleware('project.access')
  * Wymaga parametru route {project}
  */
 class CheckProjectAccess
@@ -34,7 +34,7 @@ class CheckProjectAccess
             abort(403, __('messages.project_access_denied'));
         }
 
-        // Sprawdź minimalną rolę projektową (jeśli wymagana)
+        // Some routes also demand a minimum role on the project
         if ($minRole !== 'viewer' && !$user->isAdmin()) {
             $projectRole = $user->projectRole($project);
             $roleHierarchy = ['viewer' => 0, 'contributor' => 1, 'project_manager' => 2];

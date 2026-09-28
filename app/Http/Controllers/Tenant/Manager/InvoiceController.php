@@ -231,7 +231,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Rejestruje płatność.
+     * Records a payment against the invoice.
      */
     public function recordPayment(Request $request, Invoice $invoice)
     {
@@ -270,7 +270,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Wysyła fakturę emailem do klienta.
+     * E-mails the invoice to the client.
      */
     public function send(Invoice $invoice)
     {

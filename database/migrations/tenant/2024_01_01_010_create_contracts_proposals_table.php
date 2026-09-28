@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Typy kontraktów
+        // Contract types
         Schema::create('contract_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -80,7 +80,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Śledzenie otwarć propozycji
+        // Records each time a proposal is opened
         Schema::create('proposal_views', function (Blueprint $table) {
             $table->id();
             $table->foreignId('proposal_id')->constrained()->cascadeOnDelete();

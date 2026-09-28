@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Sprawdza czy zalogowany użytkownik ma wymaganą rolę workspace.
+ * Checks the signed-in user holds one of the roles the route asks for.
  *
- * Użycie w routes: ->middleware('workspace.role:admin,manager')
+ * Use: ->middleware('workspace.role:admin,manager')
  */
 class CheckWorkspaceRole
 {

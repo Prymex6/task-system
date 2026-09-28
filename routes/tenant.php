@@ -135,7 +135,7 @@ Route::middleware([
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        /* --- Projekty --- */
+        /* --- Projects --- */
         Route::prefix('projects')->name('projects.')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('index');
             Route::get('/create', [ProjectController::class, 'create'])->name('create');
@@ -150,10 +150,10 @@ Route::middleware([
             Route::get('/{project}/tasks', [TaskController::class, 'index'])->name('tasks.index');
             Route::get('/{project}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
 
-            // Board widok
+            // Board view
             Route::get('/{project}/board', [ProjectController::class, 'board'])->name('board');
 
-            // Członkowie projektu
+            // Project members
             Route::get('/{project}/members', [ProjectController::class, 'members'])->name('members');
             Route::post('/{project}/members', [ProjectController::class, 'addMember'])->name('members.add');
             Route::put('/{project}/members/{member}', [ProjectController::class, 'updateMember'])->name('members.update');
@@ -165,12 +165,12 @@ Route::middleware([
             Route::put('/{project}/milestones/{milestone}', [ProjectMilestoneController::class, 'update'])->name('milestones.update');
             Route::delete('/{project}/milestones/{milestone}', [ProjectMilestoneController::class, 'destroy'])->name('milestones.destroy');
 
-            // Pliki
+            // Files
             Route::get('/{project}/files', [ProjectFileController::class, 'index'])->name('files.index');
             Route::post('/{project}/files', [ProjectFileController::class, 'store'])->name('files.store');
             Route::delete('/{project}/files/{file}', [ProjectFileController::class, 'destroy'])->name('files.destroy');
 
-            // Dyskusje
+            // Discussions
             Route::get('/{project}/discussions', [ProjectDiscussionController::class, 'index'])->name('discussions.index');
             Route::post('/{project}/discussions', [ProjectDiscussionController::class, 'store'])->name('discussions.store');
             Route::put('/{project}/discussions/{discussion}', [ProjectDiscussionController::class, 'update'])->name('discussions.update');
@@ -178,7 +178,7 @@ Route::middleware([
             Route::post('/{project}/discussions/{discussion}/comments', [ProjectDiscussionController::class, 'storeComment'])->name('discussions.comments.store');
         });
 
-        // Szablony projektów
+        // Project templates
         Route::prefix('project-templates')->name('project-templates.')->group(function () {
             Route::get('/', [ProjectTemplateController::class, 'index'])->name('index');
             Route::post('/', [ProjectTemplateController::class, 'store'])->name('store');
@@ -186,7 +186,7 @@ Route::middleware([
             Route::delete('/{template}', [ProjectTemplateController::class, 'destroy'])->name('destroy');
         });
 
-        /* --- Zadania --- */
+        /* --- Tasks --- */
         Route::prefix('tasks')->name('tasks.')->group(function () {
             Route::get('/', [TaskController::class, 'index'])->name('index');
             Route::get('/my', [TaskController::class, 'myTasks'])->name('my');
@@ -202,16 +202,16 @@ Route::middleware([
             Route::post('/{task}/move', [TaskController::class, 'move'])->name('move');
             Route::post('/{task}/duplicate', [TaskController::class, 'duplicate'])->name('duplicate');
 
-            // Komentarze
+            // Comments
             Route::post('/{task}/comments', [TaskCommentController::class, 'store'])->name('comments.store');
             Route::put('/{task}/comments/{comment}', [TaskCommentController::class, 'update'])->name('comments.update');
             Route::delete('/{task}/comments/{comment}', [TaskCommentController::class, 'destroy'])->name('comments.destroy');
 
-            // Załączniki
+            // Attachments
             Route::post('/{task}/attachments', [TaskAttachmentController::class, 'store'])->name('attachments.store');
             Route::delete('/{task}/attachments/{attachment}', [TaskAttachmentController::class, 'destroy'])->name('attachments.destroy');
 
-            // Checklista
+            // Checklists
             Route::post('/{task}/checklists', [TaskChecklistController::class, 'store'])->name('checklists.store');
             Route::put('/{task}/checklists/{checklist}', [TaskChecklistController::class, 'update'])->name('checklists.update');
             Route::delete('/{task}/checklists/{checklist}', [TaskChecklistController::class, 'destroy'])->name('checklists.destroy');
@@ -219,21 +219,21 @@ Route::middleware([
             Route::put('/{task}/checklists/{checklist}/items/{item}', [TaskChecklistController::class, 'updateItem'])->name('checklists.items.update');
             Route::delete('/{task}/checklists/{checklist}/items/{item}', [TaskChecklistController::class, 'destroyItem'])->name('checklists.items.destroy');
 
-            // Czas pracy przy zadaniu
+            // Time logged against a task
             Route::post('/{task}/timer/start', [TaskTimerController::class, 'start'])->name('timer.start');
             Route::post('/{task}/timer/stop', [TaskTimerController::class, 'stop'])->name('timer.stop');
             Route::post('/{task}/time-log', [TaskTimerController::class, 'logManual'])->name('time-log.store');
             Route::delete('/{task}/time-log/{log}', [TaskTimerController::class, 'destroyLog'])->name('time-log.destroy');
         });
 
-        // Etykiety
+        // Labels
         Route::resource('task-labels', TaskLabelController::class)->except(['show']);
 
-        // Statusy zadań
+        // Task statuses
         Route::resource('task-statuses', TaskStatusController::class)->except(['show', 'create', 'edit']);
         Route::post('/task-statuses/reorder', [TaskStatusController::class, 'reorder'])->name('task-statuses.reorder');
 
-        /* --- Sprinty --- */
+        /* --- Sprints --- */
         Route::prefix('sprints')->name('sprints.')->group(function () {
             Route::get('/', [SprintController::class, 'index'])->name('index');
             Route::post('/', [SprintController::class, 'store'])->name('store');
@@ -246,7 +246,7 @@ Route::middleware([
             Route::delete('/{sprint}/tasks/{task}', [SprintTaskController::class, 'destroy'])->name('tasks.remove');
         });
 
-        /* --- Śledzenie czasu --- */
+        /* --- Time tracking --- */
         Route::prefix('time')->name('time.')->group(function () {
             Route::get('/', [TimeEntryController::class, 'index'])->name('index');
             Route::get('/team', [TimeEntryController::class, 'team'])->name('team');
@@ -268,17 +268,17 @@ Route::middleware([
 
         /* --- CRM --- */
         Route::prefix('crm')->group(function () {
-            // Klienci
+            // Clients
             Route::resource('clients', ClientController::class);
             Route::get('/clients/{client}/contacts', [ClientContactController::class, 'index'])->name('clients.contacts.index');
             Route::post('/clients/{client}/contacts', [ClientContactController::class, 'store'])->name('clients.contacts.add');
             Route::put('/clients/{client}/contacts/{contact}', [ClientContactController::class, 'update'])->name('clients.contacts.update');
             Route::delete('/clients/{client}/contacts/{contact}', [ClientContactController::class, 'destroy'])->name('clients.contacts.remove');
 
-            // Grupy klientów
+            // Client groups
             Route::resource('client-groups', ClientGroupController::class)->except(['show', 'create', 'edit']);
 
-            // Leady
+            // Leads
             Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
             Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');
             Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
@@ -289,7 +289,7 @@ Route::middleware([
             Route::post('/leads/{lead}/convert', [LeadController::class, 'convert'])->name('leads.convert');
             Route::post('/leads/{lead}/activities', [LeadActivityController::class, 'store'])->name('leads.activity');
 
-            // Pipeline dealów
+            // Deal pipeline
             Route::get('/deals', [DealController::class, 'index'])->name('deals.index');
             Route::get('/deals/pipeline', [DealController::class, 'pipeline'])->name('deals.pipeline');
             Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
@@ -310,17 +310,17 @@ Route::middleware([
                 Route::post('/reorder', [DealStageController::class, 'reorder'])->name('reorder');
             });
 
-            // Notatki (polimorficzne)
+            // Notes, attached to any record
             Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
             Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
             Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
         });
 
-        /* --- Finanse (bez prefixu nazwy — Vue używa invoices.*, estimates.*, expenses.*) --- */
+        /* --- Finance (no name prefix: the pages use invoices.*, estimates.*, expenses.*) --- */
         Route::prefix('finance')->group(function () {
             Route::get('/overview', [FinanceController::class, 'overview'])->name('finance.overview');
 
-            // Faktury
+            // Invoices
             Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
             Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
             Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
@@ -334,7 +334,7 @@ Route::middleware([
             Route::post('/invoices/{invoice}/payment', [InvoicePaymentController::class, 'store'])->name('invoices.payment');
             Route::delete('/invoices/{invoice}/payments/{payment}', [InvoicePaymentController::class, 'destroy'])->name('invoices.payments.destroy');
 
-            // Faktury cykliczne
+            // Recurring invoices
             Route::get('/recurring-invoices', [RecurringInvoiceController::class, 'index'])->name('recurring-invoices.index');
             Route::get('/recurring-invoices/create', [RecurringInvoiceController::class, 'create'])->name('recurring-invoices.create');
             Route::post('/recurring-invoices', [RecurringInvoiceController::class, 'store'])->name('recurring-invoices.store');
@@ -344,11 +344,11 @@ Route::middleware([
             Route::delete('/recurring-invoices/{recurringInvoice}', [RecurringInvoiceController::class, 'destroy'])->name('recurring-invoices.destroy');
             Route::post('/recurring-invoices/{recurringInvoice}/generate', [RecurringInvoiceController::class, 'generate'])->name('recurring-invoices.generate');
 
-            // Raporty wydatkow
+            // Expense reports
             Route::get('/expense-reports', [ExpenseReportController::class, 'index'])->name('expense-reports.index');
             Route::post('/expense-reports/{report}/review', [ExpenseReportController::class, 'approve'])->name('expense-reports.review');
 
-            // Wyceny
+            // Estimates
             Route::get('/estimates', [EstimateController::class, 'index'])->name('estimates.index');
             Route::get('/estimates/create', [EstimateController::class, 'create'])->name('estimates.create');
             Route::post('/estimates', [EstimateController::class, 'store'])->name('estimates.store');
@@ -360,7 +360,7 @@ Route::middleware([
             Route::post('/estimates/{estimate}/convert', [EstimateController::class, 'convertToInvoice'])->name('estimates.convert');
             Route::get('/estimates/{estimate}/pdf', [EstimateController::class, 'pdf'])->name('estimates.pdf');
 
-            // Wydatki
+            // Expenses
             Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
             Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
             Route::put('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
@@ -368,19 +368,19 @@ Route::middleware([
             Route::post('/expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
             Route::post('/expenses/{expense}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
 
-            // Dodatkowe
+            // Extras
             Route::resource('tax-rates', TaxRateController::class)->except(['show', 'create', 'edit']);
             Route::resource('currencies', CurrencyController::class)->except(['show', 'create', 'edit']);
         });
 
-        /* --- Faktury korygujące --- */
+        /* --- Credit notes --- */
         Route::prefix('credit-notes')->name('credit-notes.')->group(function () {
             Route::get('/', [CreditNoteController::class, 'index'])->name('index');
             Route::post('/', [CreditNoteController::class, 'store'])->name('store');
             Route::get('/{creditNote}/pdf', [CreditNoteController::class, 'pdf'])->name('pdf');
         });
 
-        /* --- Kontrakty --- */
+        /* --- Contracts --- */
         Route::prefix('contracts')->name('contracts.')->group(function () {
             // Declared before the wildcard routes below: Laravel matches in
             // order, and /{model} would otherwise swallow these paths and
@@ -398,7 +398,7 @@ Route::middleware([
             Route::post('/{contract}/terminate', [ContractController::class, 'terminate'])->name('terminate');
         });
 
-        /* --- Propozycje --- */
+        /* --- Proposals --- */
         Route::prefix('proposals')->name('proposals.')->group(function () {
             Route::get('/', [ProposalController::class, 'index'])->name('index');
             Route::get('/create', [ProposalController::class, 'create'])->name('create');
@@ -431,7 +431,7 @@ Route::middleware([
             Route::post('/{ticket}/reopen', [TicketController::class, 'reopen'])->name('reopen');
         });
 
-        /* --- Baza Wiedzy --- */
+        /* --- Knowledge base --- */
         Route::prefix('knowledge-base')->name('kb.')->group(function () {
             // Declared before the wildcard routes below: Laravel matches in
             // order, and /{model} would otherwise swallow these paths and
@@ -449,7 +449,7 @@ Route::middleware([
 
         /* --- HR --- */
         Route::prefix('hr')->group(function () {
-            // Zespół
+            // Team
             Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
             Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
             Route::get('/staff/{staff}', [StaffController::class, 'show'])->name('staff.show');
@@ -458,17 +458,17 @@ Route::middleware([
             Route::post('/staff/{staff}/deactivate', [StaffController::class, 'deactivate'])->name('staff.deactivate');
             Route::post('/staff/{staff}/activate', [StaffController::class, 'activate'])->name('staff.activate');
 
-            // Zaproszenia
+            // Invitations
             Route::get('/invitations', [InvitationController::class, 'index'])->name('invitations.index');
             Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
             Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
             Route::post('/invitations/{invitation}/resend', [InvitationController::class, 'resend'])->name('invitations.resend');
 
-            // Role i uprawnienia
+            // Roles and permissions
             Route::get('/permissions', [SettingsController::class, 'rolePermissions'])->name('permissions.index');
             Route::put('/permissions', [SettingsController::class, 'updateRolePermissions'])->name('permissions.update');
 
-            // Działy HR
+            // Departments
             Route::resource('departments', DepartmentHrController::class)->except(['show']);
             Route::resource('positions', PositionController::class)->except(['show', 'create', 'edit']);
 
@@ -488,15 +488,15 @@ Route::middleware([
             });
             Route::resource('leave-types', LeaveTypeController::class)->except(['show', 'create', 'edit']);
 
-            // Ogłoszenia
+            // Announcements
             Route::resource('announcements', AnnouncementController::class);
             Route::post('/announcements/{announcement}/read', [AnnouncementController::class, 'markRead'])->name('announcements.read');
 
-            // Oceny pracownicze
+            // Performance reviews
             Route::resource('performance', PerformanceReviewController::class)->except(['show']);
         });
 
-        /* --- Chat wewnętrzny --- */
+        /* --- Internal chat --- */
         Route::prefix('messages')->name('messages.')->group(function () {
             Route::get('/', [MessageController::class, 'index'])->name('index');
             Route::get('/{conversation}', [MessageController::class, 'show'])->name('show');
@@ -560,16 +560,16 @@ Route::middleware([
         /* --- Globalne wyszukiwanie --- */
         Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-        /* --- Profil użytkownika --- */
+        /* --- User profile --- */
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
-        /* --- Zależności zadań --- */
+        /* --- Task dependencies --- */
         Route::post('/tasks/{task}/dependencies', [TaskDependencyController::class, 'store'])->name('tasks.dependencies.store');
         Route::delete('/tasks/{task}/dependencies/{dependency}', [TaskDependencyController::class, 'destroy'])->name('tasks.dependencies.destroy');
         Route::get('/tasks/{task}/can-start', [TaskDependencyController::class, 'canStart'])->name('tasks.can-start');
 
-        /* --- Powtarzające się zadania --- */
+        /* --- Recurring tasks --- */
         Route::get('/tasks/recurring', [TaskRecurringController::class, 'index'])->name('tasks.recurring.index');
         Route::post('/tasks/{task}/recurring', [TaskRecurringController::class, 'store'])->name('tasks.recurring.store');
         Route::delete('/tasks/{task}/recurring', [TaskRecurringController::class, 'destroy'])->name('tasks.recurring.destroy');
@@ -579,7 +579,7 @@ Route::middleware([
         Route::put('/tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'update'])->name('tasks.subtasks.update');
         Route::delete('/tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->name('tasks.subtasks.destroy');
 
-        /* --- Szablony zadań --- */
+        /* --- Task templates --- */
         Route::prefix('task-templates')->name('task-templates.')->group(function () {
             Route::get('/', [TaskTemplateController::class, 'index'])->name('index');
             Route::post('/', [TaskTemplateController::class, 'store'])->name('store');
@@ -595,7 +595,7 @@ Route::middleware([
             Route::delete('/{holiday}', [HolidayController::class, 'destroy'])->name('destroy');
         });
 
-        /* --- Bilanse urlopów --- */
+        /* --- Leave balances --- */
         Route::prefix('hr/leave-balances')->name('hr.leave-balances.')->group(function () {
             Route::get('/', [LeaveBalanceController::class, 'index'])->name('index');
             Route::post('/', [LeaveBalanceController::class, 'store'])->name('store');
@@ -611,23 +611,23 @@ Route::middleware([
             Route::delete('/{tag}', [TagController::class, 'destroy'])->name('destroy');
         });
 
-        /* --- Aktywności CRM --- */
+        /* --- CRM activity --- */
         Route::prefix('crm/activities')->name('crm.activities.')->group(function () {
             Route::get('/', [ActivityController::class, 'index'])->name('index');
             Route::post('/', [ActivityController::class, 'store'])->name('store');
             Route::delete('/{activity}', [ActivityController::class, 'destroy'])->name('destroy');
         });
 
-        /* --- Budżet projektu --- */
+        /* --- Project budget --- */
         Route::get('/projects/{project}/budget', [BudgetController::class, 'show'])->name('projects.budget');
         Route::post('/projects/{project}/budget', [BudgetController::class, 'store'])->name('projects.budget.store');
         Route::put('/projects/{project}/budget', [BudgetController::class, 'update'])->name('projects.budget.update');
 
-        /* --- Metody płatności --- */
+        /* --- Payment methods --- */
         Route::resource('finance/payment-methods', PaymentMethodController::class)
             ->except(['show', 'create', 'edit'])->names('payment-methods');
 
-        /* --- Profile pracowników --- */
+        /* --- Employee profiles --- */
         Route::get('/hr/staff/{user}/profile', [StaffProfileController::class, 'show'])->name('hr.staff.profile');
         Route::put('/hr/staff/{user}/profile', [StaffProfileController::class, 'update'])->name('hr.staff.profile.update');
         Route::put('/hr/staff/{user}/role', [StaffProfileController::class, 'updateRole'])->name('hr.staff.role');
@@ -658,19 +658,19 @@ Route::middleware([
         Route::middleware(['auth:customer'])->name('portal.')->group(function () {
             Route::get('/dashboard', [PortalController::class, 'dashboard'])->name('dashboard');
 
-            // Projekty (podgląd)
+            // Projects, read only
             Route::get('/projects', [PortalController::class, 'projects'])->name('projects');
             Route::get('/projects/{project}', [PortalController::class, 'projectShow'])->name('projects.show');
 
-            // Zadania (podgląd + komentarze)
+            // Tasks, read only plus comments
             Route::get('/tasks', [PortalController::class, 'tasks'])->name('tasks');
 
-            // Faktury
+            // Invoices
             Route::get('/invoices', [PortalController::class, 'invoices'])->name('invoices');
             Route::get('/invoices/{invoice}', [PortalController::class, 'invoiceShow'])->name('invoices.show');
             Route::get('/invoices/{invoice}/pdf', [PortalController::class, 'invoicePdf'])->name('invoices.pdf');
 
-            // Wyceny
+            // Estimates
             Route::get('/estimates', [PortalController::class, 'estimates'])->name('estimates');
             Route::post('/estimates/{estimate}/accept', [PortalController::class, 'estimateAccept'])->name('estimates.accept');
             Route::post('/estimates/{estimate}/reject', [PortalController::class, 'estimateReject'])->name('estimates.reject');
@@ -706,7 +706,7 @@ Route::middleware([
             Route::put('/account/password', [PortalController::class, 'changePassword'])->name('account.password');
         });
 
-        // Śledzenie otwarcia propozycji (publiczne - bez auth)
+        // Proposal open tracking, public and unauthenticated
         Route::get('/proposals/{token}/view', [App\Http\Controllers\Tenant\Client\ProposalController::class, 'trackView'])->name('portal.proposals.track');
     });
 

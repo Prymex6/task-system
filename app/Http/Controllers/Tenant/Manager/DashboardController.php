@@ -86,7 +86,7 @@ class DashboardController extends Controller
                 'client' => $p->client?->getDisplayNameAttribute(),
             ]);
 
-        // === Moje zadania (nadchodzące) ===
+        // === Tasks coming up for this person ===
         $upcomingTasks = Task::with(['project', 'status'])
             ->whereHas('assignees', fn ($q) => $q->where('user_id', $user->id))
             ->whereNull('completed_at')
@@ -103,7 +103,7 @@ class DashboardController extends Controller
                 'is_overdue' => $t->isOverdue(),
             ]);
 
-        // === Aktywność w projekcie (ostatnie 7 dni) ===
+        // === Project activity over the last 7 days ===
         $activityChart = [];
         for ($i = 6; $i >= 0; $i--) {
             $day = Carbon::now($tz)->subDays($i)->toDateString();

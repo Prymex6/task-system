@@ -20,7 +20,7 @@ class TaskController extends Controller
         $user = Auth::guard('tenant')->user();
         $query = Task::with(['project', 'assignees', 'status', 'labels']);
 
-        // Tylko zadania z projektów widocznych dla użytkownika
+        // Only tasks from projects this person can see
         if (!$user->isAdmin()) {
             $query->whereHas('project', fn ($q) => $q->whereHas('members', fn ($m) => $m->where('user_id', $user->id)));
         }
@@ -101,7 +101,7 @@ class TaskController extends Controller
             'labels.*' => 'exists:task_labels,id',
         ]);
 
-        // Sprawdź dostęp do projektu
+        // Check they are on the project first
         $project = Project::findOrFail($validated['project_id']);
         abort_unless($user->isAdmin() || $project->members->contains($user->id), 403);
 

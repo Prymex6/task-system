@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Statusy zadań (konfigurowalne)
+        // Task statuses, configurable per workspace
         Schema::create('task_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Etykiety
+        // Labels
         Schema::create('task_labels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->index('due_date');
         });
 
-        // Przypisani użytkownicy
+        // Assignees
         Schema::create('task_assignees', function (Blueprint $table) {
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -65,14 +65,14 @@ return new class extends Migration
             $table->primary(['task_id', 'user_id']);
         });
 
-        // Etykiety przypisane do zadań
+        // Labels attached to tasks
         Schema::create('task_label_pivot', function (Blueprint $table) {
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
             $table->foreignId('task_label_id')->constrained()->cascadeOnDelete();
             $table->primary(['task_id', 'task_label_id']);
         });
 
-        // Komentarze
+        // Comments
         Schema::create('task_comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
@@ -95,7 +95,7 @@ return new class extends Migration
             $table->unique(['task_comment_id', 'user_id', 'emoji']);
         });
 
-        // Załączniki
+        // Attachments
         Schema::create('task_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
@@ -127,7 +127,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Zależności między zadaniami
+        // Dependencies between tasks
         Schema::create('task_dependencies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
@@ -150,7 +150,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Szablony zadań
+        // Task templates
         Schema::create('task_templates', function (Blueprint $table) {
             $table->id();
             $table->string('title');

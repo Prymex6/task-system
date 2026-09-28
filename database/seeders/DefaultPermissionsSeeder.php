@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Zasila domyślne uprawnienia dla ról workspace.
+ * Seeds the default permissions for each workspace role.
  * Uruchom po utworzeniu nowego tenanta:
  *   php artisan tenants:run db:seed --option="class=DefaultPermissionsSeeder"
  */
@@ -14,8 +14,8 @@ class DefaultPermissionsSeeder extends Seeder
 {
     /**
      * Mapa: rola => lista dozwolonych akcji.
-     * owner i admin mają dostęp do wszystkiego (allowed = true dla wszystkiego).
-     * manager, member, guest mają ograniczony dostęp.
+     * An owner or admin is allowed everything, without a row per action.
+     * Manager, member and guest each get a narrower set.
      */
     private array $defaults = [
         // ── Projekty ─────────────────────────────────────────────

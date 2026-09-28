@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Webhooks wychodzące
+        // Outgoing webhooks
         Schema::create('webhooks', function (Blueprint $table) {
             $table->id();
             // Optional: the screen that creates these asks for a URL and the
@@ -68,7 +68,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Własne pola (polimorficzne)
+        // Custom fields, attached to any record
         Schema::create('custom_fields', function (Blueprint $table) {
             $table->id();
             $table->string('model'); // 'project', 'task', 'client', 'invoice'

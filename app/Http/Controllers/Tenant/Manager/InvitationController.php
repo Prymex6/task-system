@@ -36,7 +36,7 @@ class InvitationController extends Controller
 
         $user = Auth::guard('tenant')->user();
 
-        // Sprawdź czy user z tym emailem już istnieje
+        // Somebody in this workspace may already use that address
         if (User::where('email', $validated['email'])->exists()) {
             return back()->withErrors(['email' => __('messages.user_email_taken')]);
         }
@@ -60,7 +60,7 @@ class InvitationController extends Controller
     public function resend(Invitation $invitation)
     {
         if (!$this->invitationService->isValid($invitation)) {
-            // Stwórz nowe zaproszenie
+            // Send a fresh invitation
             $user = Auth::guard('tenant')->user();
             $invitation = $this->invitationService->invite(
                 $invitation->email,
@@ -68,7 +68,7 @@ class InvitationController extends Controller
                 $user
             );
         } else {
-            // Wyślij ponownie istniejące
+            // Resend the one already on file
             Mail::to($invitation->email)
                 ->queue(new TeamInvitationMail($invitation, $invitation->invitedBy));
         }

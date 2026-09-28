@@ -68,7 +68,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Zamień 429 na polską wiadomość — dla Inertia i JSON (axios)
+        // Give a throttled request a translated message, for Inertia and JSON alike
         $exceptions->render(function (
             ThrottleRequestsException $e,
             Request $request

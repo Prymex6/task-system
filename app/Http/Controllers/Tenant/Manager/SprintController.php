@@ -145,7 +145,7 @@ class SprintController extends Controller
     }
 
     /**
-     * Kończy sprint.
+     * Closes a sprint.
      */
     public function complete(Sprint $sprint)
     {

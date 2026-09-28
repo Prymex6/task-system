@@ -181,7 +181,7 @@ class ProjectController extends Controller
         return back()->with('success', __('messages.project_restored'));
     }
 
-    // ── Zarządzanie członkami ──────────────────────────────────────────────────
+    // ── Project members ───────────────────────────────────────────────────────
 
     public function members(Project $project)
     {

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Statusy projektów (konfigurowalne)
+        // Project statuses, configurable per workspace
         Schema::create('project_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Członkowie projektu
+        // Project members
         Schema::create('project_members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->unique(['project_id', 'user_id']);
         });
 
-        // Kamienie milowe
+        // Milestones
         Schema::create('project_milestones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
@@ -63,7 +63,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Foldery plików
+        // File folders
         Schema::create('project_file_folders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
@@ -84,7 +84,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Dyskusje
+        // Discussions
         Schema::create('project_discussions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
@@ -106,7 +106,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Szablony projektów
+        // Project templates
         Schema::create('project_templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -126,7 +126,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Przypięte projekty per user
+        // Projects a user has pinned
         Schema::create('project_pinned', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();

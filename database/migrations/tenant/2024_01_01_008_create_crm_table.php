@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Aktywności na leadzie
+        // Activity on a lead
         Schema::create('lead_activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lead_id')->constrained()->cascadeOnDelete();
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Etapy pipeline dealów (konfigurowalne)
+        // Pipeline stages, configurable per workspace
         Schema::create('deal_stages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -53,7 +53,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Deale / szanse sprzedaży
+        // Deals
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('deal_stage_id')->nullable()->constrained()->nullOnDelete();
@@ -70,7 +70,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Notatki (polimorficzne)
+        // Notes, attached to any record
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->morphs('notable'); // client, lead, deal, project, task
@@ -93,7 +93,7 @@ return new class extends Migration
             $table->primary(['tag_id', 'taggable_type', 'taggable_id']);
         });
 
-        // Aktywności CRM (polimorficzne)
+        // CRM activity, attached to any record
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->morphs('subject'); // client, lead, deal

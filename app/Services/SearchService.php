@@ -40,12 +40,12 @@ class SearchService
             $results[] = ['type' => 'task', 'id' => $t->id, 'title' => $t->title, 'subtitle' => $t->project?->name ?? 'Zadanie', 'url' => route('tenant.manager.tasks.show', $t)];
         }
 
-        // Klienci
+        // Clients
         foreach (Client::where('name', 'like', $like)->limit(5)->get() as $c) {
             $results[] = ['type' => 'client', 'id' => $c->id, 'title' => $c->name, 'subtitle' => 'Klient', 'url' => route('tenant.manager.clients.show', $c)];
         }
 
-        // Faktury
+        // Invoices
         foreach (Invoice::where('number', 'like', $like)->limit(3)->get() as $i) {
             $results[] = ['type' => 'invoice', 'id' => $i->id, 'title' => $i->number, 'subtitle' => 'Faktura', 'url' => route('tenant.manager.invoices.show', $i)];
         }

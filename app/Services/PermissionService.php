@@ -10,7 +10,7 @@ class PermissionService
 {
     /**
      * Sprawdza uprawnienie workspace dla usera.
-     * Owner i admin zawsze mają dostęp.
+     * An owner or admin is allowed everything.
      */
     public function can(User $user, string $action): bool
     {
@@ -26,7 +26,7 @@ class PermissionService
     }
 
     /**
-     * Sprawdza dostęp do projektu.
+     * Whether a user may open a project.
      */
     public function canAccessProject(User $user, Project $project): bool
     {
@@ -38,7 +38,7 @@ class PermissionService
     }
 
     /**
-     * Sprawdza minimalną rolę projektową.
+     * Whether a user holds at least a given role on a project.
      */
     public function hasProjectRole(User $user, Project $project, string $minRole): bool
     {

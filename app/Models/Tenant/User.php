@@ -106,8 +106,8 @@ class User extends Authenticatable
     }
 
     /**
-     * Sprawdza czy użytkownik ma dane uprawnienie workspace.
-     * owner i admin zawsze mają dostęp do wszystkiego.
+     * Whether this user holds a given workspace permission.
+     * An owner or admin holds all of them, without a row to say so.
      */
     public function hasPermission(string $action): bool
     {
@@ -123,7 +123,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Sprawdza czy user ma dostęp do danego projektu.
+     * Whether this user may open a given project.
      * Owner/Admin widzi wszystkie. Reszta tylko przypisane.
      */
     public function canAccessProject(Project $project): bool
@@ -136,7 +136,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Zwraca rolę użytkownika w projekcie lub null jeśli nie jest członkiem.
+     * Their role on a project, or null when they are not on it.
      */
     public function projectRole(Project $project): ?string
     {

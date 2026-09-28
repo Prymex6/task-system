@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Działy firmowe (HR)
+        // Departments
         Schema::create('departments_hr', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Profile HR pracowników
+        // Employee HR profiles
         Schema::create('staff_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Ogłoszenia firmowe
+        // Company announcements
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
@@ -57,7 +57,7 @@ return new class extends Migration
             $table->primary(['announcement_id', 'user_id']);
         });
 
-        // Dni wolne / Święta
+        // Public holidays
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -81,7 +81,7 @@ return new class extends Migration
             $table->unique(['user_id', 'date']);
         });
 
-        // Typy urlopów
+        // Leave types
         Schema::create('leave_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -104,7 +104,7 @@ return new class extends Migration
             $table->unique(['user_id', 'leave_type_id', 'year']);
         });
 
-        // Wnioski urlopowe
+        // Leave requests
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -120,7 +120,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Oceny pracownicze
+        // Performance reviews
         Schema::create('performance_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

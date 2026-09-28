@@ -13,7 +13,7 @@ use Inertia\Inertia;
 class TimerController extends Controller
 {
     /**
-     * Zwraca aktywny timer użytkownika.
+     * The timer this person currently has running.
      */
     public function current()
     {
@@ -72,7 +72,7 @@ class TimerController extends Controller
     }
 
     /**
-     * Ręczne dodanie wpisu czasu.
+     * Adds a time entry by hand rather than from a timer.
      */
     public function storeEntry(Request $request)
     {
@@ -105,7 +105,7 @@ class TimerController extends Controller
     }
 
     /**
-     * Lista wpisów czasu (timesheet).
+     * The time entries behind a timesheet.
      */
     public function index(Request $request)
     {

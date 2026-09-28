@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Działy obsługi zgłoszeń
+        // Support departments
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Zgłoszenia support
+        // Support tickets
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
@@ -65,7 +65,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Oceny obsługi
+        // Support ratings
         Schema::create('ticket_ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ticket_id')->constrained()->cascadeOnDelete();

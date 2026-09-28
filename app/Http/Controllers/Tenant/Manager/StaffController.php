@@ -60,7 +60,7 @@ class StaffController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        // Nie pozwól zmienić roli owner
+        // The workspace owner keeps their role, whoever is asking
         if ($staff->isOwner() && Auth::guard('tenant')->id() !== $staff->id) {
             return back()->withErrors(['workspace_role' => __('messages.cannot_change_owner_role')]);
         }

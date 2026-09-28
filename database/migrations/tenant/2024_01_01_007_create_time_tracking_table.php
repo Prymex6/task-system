@@ -45,7 +45,7 @@ return new class extends Migration
             $table->unique(['sprint_id', 'logged_date']);
         });
 
-        // Śledzenie czasu
+        // Time tracking
         Schema::create('time_entries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -76,7 +76,7 @@ return new class extends Migration
             $table->unique('user_id'); // jeden timer per user
         });
 
-        // Zatwierdzanie timesheetów
+        // Timesheet approvals
         Schema::create('timesheet_approvals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

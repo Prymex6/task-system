@@ -106,8 +106,8 @@ class Project extends Model
     }
 
     /**
-     * Scope — zwraca projekty widoczne dla danego użytkownika.
-     * Owner/Admin widzą wszystkie. Reszta tylko przypisane.
+     * Scope: the projects a given user is allowed to see.
+     * An owner or admin sees all of them; everybody else only their own.
      */
     public function scopeVisibleTo($query, User $user)
     {

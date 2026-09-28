@@ -80,7 +80,7 @@ class ReportController extends Controller
 
         $year = $request->filled('year') ? (int) $request->year : now()->year;
 
-        // Miesięczne przychody (opłacone faktury)
+        // Revenue by month, counting what was actually paid
         $monthlyRevenue = Invoice::where('status', 'paid')
             ->whereYear('paid_at', $year)
             ->select(DB::raw('MONTH(paid_at) as month'), DB::raw('SUM(total) as total'))
@@ -108,7 +108,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Raport projektów.
+     * Progress and budget for every project.
      */
     public function projectReport(Request $request)
     {

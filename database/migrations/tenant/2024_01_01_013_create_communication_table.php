@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Chat wewnętrzny
+        // Internal chat
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(); // dla grupowych

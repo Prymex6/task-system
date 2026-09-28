@@ -11,11 +11,11 @@ use Illuminate\Support\Str;
 class InvitationService
 {
     /**
-     * Tworzy i wysyła zaproszenie do workspace.
+     * Creates an invitation and sends it.
      */
     public function invite(string $email, string $role, User $invitedBy): Invitation
     {
-        // Usuń poprzednie nieprzyjęte zaproszenie dla tego emaila
+        // Drop an earlier invitation to the same address that was never accepted
         Invitation::where('email', $email)->whereNull('accepted_at')->delete();
 
         $invitation = Invitation::create([
@@ -32,11 +32,11 @@ class InvitationService
     }
 
     /**
-     * Akceptuje zaproszenie i tworzy użytkownika lub przypisuje do workspace.
+     * Accepts an invitation, creating the user or moving an existing one across.
      */
     public function accept(Invitation $invitation, array $userData): User
     {
-        // Sprawdź czy user już istnieje (zmiana workspace)
+        // They may already have an account, from another workspace
         $user = User::where('email', $invitation->email)->first();
 
         if (!$user) {
@@ -48,7 +48,7 @@ class InvitationService
                 'is_active' => true,
             ]);
         } else {
-            // Aktualizuj rolę dla istniejącego użytkownika
+            // An existing account takes the role the invitation carried
             $user->update(['workspace_role' => $invitation->workspace_role]);
         }
 
@@ -58,7 +58,7 @@ class InvitationService
     }
 
     /**
-     * Sprawdza czy zaproszenie jest ważne.
+     * Whether an invitation can still be used.
      */
     public function isValid(Invitation $invitation): bool
     {
@@ -67,7 +67,7 @@ class InvitationService
     }
 
     /**
-     * Usuwa wygasłe zaproszenia.
+     * Clears out invitations nobody used in time.
      */
     public function cleanExpired(): int
     {

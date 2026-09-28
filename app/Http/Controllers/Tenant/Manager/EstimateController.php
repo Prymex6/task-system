@@ -138,7 +138,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Konwertuje wycenę na fakturę.
+     * Turns an accepted estimate into an invoice.
      */
     public function convertToInvoice(Estimate $estimate)
     {
