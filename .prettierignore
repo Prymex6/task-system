@@ -1,0 +1,8 @@
+public/build
+vendor
+node_modules
+storage
+tests/e2e/.output
+tests/e2e/.report
+composer.lock
+package-lock.json

@@ -1,0 +1,18 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 1
+
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
+    ignoreErrors:
+        # Larastan reads relations off the model class it can see. A lot of
+        # them here are declared on a trait or resolved through the tenancy
+        # package's dynamic model binding, which it cannot follow.
+        - identifier: larastan.relationExistence
