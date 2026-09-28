@@ -135,38 +135,9 @@
               :disabled="form.processing || !form.terms_accepted"
               class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
-              {{ form.processing ? 'Rejestracja...' : $t('common.sign_up') }}
+              {{ form.processing ? $t('common.sending') : $t('common.sign_up') }}
             </button>
           </form>
-
-          <!-- Social login (dostępne tylko w wersji testowej) -->
-          <div v-if="$page.props.app_version === 'test'" class="mt-6">
-            <div class="relative">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300"></div>
-              </div>
-              <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-white text-gray-500">{{ $t('portal.or_sign_up_with') }}</span>
-              </div>
-            </div>
-
-            <div class="mt-4 grid grid-cols-2 gap-3">
-              <a
-                :href="route('tenant.client.social.redirect', 'google')"
-                class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <i class="fa-brands fa-google mr-2 text-lg" style="color: #4285f4"></i>
-                <span class="text-sm font-medium text-gray-700">Google</span>
-              </a>
-              <a
-                :href="route('tenant.client.social.redirect', 'facebook')"
-                class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <i class="fa-brands fa-facebook-f mr-2 text-lg" style="color: #1877f2"></i>
-                <span class="text-sm font-medium text-gray-700">Facebook</span>
-              </a>
-            </div>
-          </div>
 
           <p class="mt-6 text-center text-sm text-gray-600">
             {{ $t('portal.already_have_an_account') }}

@@ -12,20 +12,14 @@
     "license": "proprietary",
     "require": {
         "php": "^8.2",
-        "artesaos/seotools": "^1.3",
         "barryvdh/laravel-dompdf": "^3.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/cashier": "^16.2",
         "laravel/framework": "^12.0",
         "laravel/reverb": "^1.7",
-        "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
-        "openpayu/openpayu": "2.3.6",
-        "spatie/laravel-activitylog": "^4.12",
-        "spatie/laravel-medialibrary": "^11.21",
         "stancl/tenancy": "^3.9",
-        "tightenco/ziggy": "^2.6",
-        "tpay-com/tpay-openapi-php": "2.3.1"
+        "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
