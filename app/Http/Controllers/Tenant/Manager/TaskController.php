@@ -66,7 +66,13 @@ class TaskController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    /**
+     * The form is reached two ways: /tasks/create, where the project is picked
+     * from the list, and /projects/{project}/tasks/create, where it is already
+     * known. Only the query string used to be read, so arriving from inside a
+     * project left the field empty and the save came back demanding it.
+     */
+    public function create(Request $request, ?Project $project = null)
     {
         $user = Auth::guard('tenant')->user();
 
@@ -79,7 +85,7 @@ class TaskController extends Controller
             'statuses' => TaskStatus::orderBy('order')->get(),
             'labels' => TaskLabel::orderBy('name')->get(),
             'staff' => User::where('is_active', true)->orderBy('name')->get(['id', 'name', 'avatar']),
-            'defaultProjectId' => $request->integer('project_id') ?: null,
+            'defaultProjectId' => $project?->id ?: ($request->integer('project_id') ?: null),
         ]);
     }
 

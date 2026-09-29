@@ -109,4 +109,31 @@ class TaskTest extends TenantTestCase
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page->has('tasks'));
     }
+
+    /**
+     * The project is in the path, not the query string. Reading only the query
+     * string left the field empty, so a task started from inside a project came
+     * straight back demanding the project it was started from.
+     */
+    public function test_the_create_form_preselects_the_project_it_was_opened_from(): void
+    {
+        $this->actingAsManager();
+
+        $project = Project::factory()->create();
+
+        $this->withoutTenantMiddleware()
+            ->get(route('tenant.manager.projects.tasks.create', $project))
+            ->assertStatus(200)
+            ->assertInertia(fn ($page) => $page->where('defaultProjectId', $project->id));
+    }
+
+    public function test_the_create_form_preselects_nothing_when_opened_on_its_own(): void
+    {
+        $this->actingAsManager();
+
+        $this->withoutTenantMiddleware()
+            ->get(route('tenant.manager.tasks.create'))
+            ->assertStatus(200)
+            ->assertInertia(fn ($page) => $page->where('defaultProjectId', null));
+    }
 }
