@@ -38,9 +38,9 @@ test.describe('Manager sign-in', () => {
   })
 
   /**
-   * Signing out is driven from the profile menu in the header. The control is
-   * reached by opening that menu rather than by its label, for the same
-   * reason the create buttons are: the wording changes with the language.
+   * Signing out sits behind the profile menu in the header, and the control is
+   * an Inertia Link rendered as a button — it posts, so it carries no href to
+   * aim at and is reached by its test id.
    */
   test('signing out returns to the sign-in page', async ({ page }) => {
     await page.goto('/login')
@@ -50,11 +50,8 @@ test.describe('Manager sign-in', () => {
     await page.waitForURL(/\/dashboard/, { timeout: 15_000 })
 
     await page.locator('header button').last().click()
+    await page.getByTestId('sign-out').click()
 
-    const signOut = page.locator('form[action$="/logout"] button, header a[href$="/logout"]').last()
-    await signOut.click()
-
-    await page.waitForLoadState('networkidle')
-    await expect(page).toHaveURL(/\/login/)
+    await page.waitForURL(/\/login/, { timeout: 15_000 })
   })
 })

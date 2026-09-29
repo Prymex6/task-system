@@ -42,8 +42,9 @@ test.describe('Create forms', () => {
 })
 
 test.describe('Workspace settings', () => {
-  test('the settings form offers its fields and a way to save them', async ({ page }) => {
-    await page.goto('/settings')
+  // /settings itself is a hub of links; the fields live on the sections.
+  test('the company section offers its fields and a way to save them', async ({ page }) => {
+    await page.goto('/settings/company')
     await expect(page.locator('input[type="text"], input[type="email"]').first()).toBeVisible()
     await expect(page.locator('button[type="submit"]').first()).toBeVisible()
   })

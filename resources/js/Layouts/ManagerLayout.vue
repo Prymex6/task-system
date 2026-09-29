@@ -249,6 +249,7 @@
                 :href="route('tenant.logout')"
                 method="post"
                 as="button"
+                data-testid="sign-out"
                 class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
               >
                 <i class="fa-solid fa-right-from-bracket w-4"></i> {{ $t('common.sign_out') }}
