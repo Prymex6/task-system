@@ -228,6 +228,10 @@ DB_DATABASE=tasksystem_test php artisan migrate --path=database/migrations/landl
 Both sets go into the one test database. In production they are separate databases, which is
 why the landlord table that would otherwise collide is named `platform_ticket_messages`.
 
+The suite does not need the front end to have been built. Every page renders through
+`app.blade.php`, which asks Vite for a manifest, so the base `TestCase` stubs Vite out —
+otherwise a hundred tests fail on a fresh clone for a reason unrelated to what they assert.
+
 PHPStan runs at **level 1 with no baseline**. The one suppressed rule is `relationExistence`,
 because Larastan cannot follow relations resolved through the tenancy package's model binding.
 Everything else is fixed rather than ignored.
