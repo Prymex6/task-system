@@ -203,6 +203,10 @@ Route::middleware([
             Route::get('/calendar', [TaskController::class, 'calendar'])->name('calendar');
             Route::get('/gantt', [TaskController::class, 'gantt'])->name('gantt');
             Route::get('/create', [TaskController::class, 'create'])->name('create');
+
+            // Ahead of /{task}, or it arrives as a task named "recurring".
+            Route::get('/recurring', [TaskRecurringController::class, 'index'])->name('recurring.index');
+
             Route::post('/', [TaskController::class, 'store'])->name('store');
             Route::get('/{task}', [TaskController::class, 'show'])->name('show');
             Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
@@ -302,6 +306,18 @@ Route::middleware([
             Route::get('/deals/pipeline', [DealController::class, 'pipeline'])->name('deals.pipeline');
             Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
             Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
+
+            // Ahead of /deals/{deal}: matching is declaration-ordered, so with
+            // the wildcard first every one of these arrives as a deal named
+            // "stages" and comes back a 404.
+            Route::prefix('deals/stages')->name('deals.stages.')->group(function () {
+                Route::get('/', [DealStageController::class, 'index'])->name('index');
+                Route::post('/', [DealStageController::class, 'store'])->name('store');
+                Route::post('/reorder', [DealStageController::class, 'reorder'])->name('reorder');
+                Route::put('/{stage}', [DealStageController::class, 'update'])->name('update');
+                Route::delete('/{stage}', [DealStageController::class, 'destroy'])->name('destroy');
+            });
+
             Route::get('/deals/{deal}', [DealController::class, 'show'])->name('deals.show');
             Route::get('/deals/{deal}/edit', [DealController::class, 'edit'])->name('deals.edit');
             Route::put('/deals/{deal}', [DealController::class, 'update'])->name('deals.update');
@@ -310,13 +326,6 @@ Route::middleware([
             Route::post('/deals/{deal}/won', [DealController::class, 'won'])->name('deals.won');
             Route::post('/deals/{deal}/lost', [DealController::class, 'lost'])->name('deals.lost');
             Route::post('/deals/{deal}/activity', [DealController::class, 'addActivity'])->name('deals.activity');
-            Route::prefix('deals/stages')->name('deals.stages.')->group(function () {
-                Route::get('/', [DealStageController::class, 'index'])->name('index');
-                Route::post('/', [DealStageController::class, 'store'])->name('store');
-                Route::put('/{stage}', [DealStageController::class, 'update'])->name('update');
-                Route::delete('/{stage}', [DealStageController::class, 'destroy'])->name('destroy');
-                Route::post('/reorder', [DealStageController::class, 'reorder'])->name('reorder');
-            });
 
             // Notes, attached to any record
             Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
@@ -587,7 +596,6 @@ Route::middleware([
         Route::get('/tasks/{task}/can-start', [TaskDependencyController::class, 'canStart'])->name('tasks.can-start');
 
         /* --- Recurring tasks --- */
-        Route::get('/tasks/recurring', [TaskRecurringController::class, 'index'])->name('tasks.recurring.index');
         Route::post('/tasks/{task}/recurring', [TaskRecurringController::class, 'store'])->name('tasks.recurring.store');
         Route::delete('/tasks/{task}/recurring', [TaskRecurringController::class, 'destroy'])->name('tasks.recurring.destroy');
 
