@@ -99,11 +99,14 @@
 <script setup>
 import { reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
 
+const { t } = useI18n()
+
 const props = defineProps({
-  leads: Object,
+  leads: { type: Object, default: () => ({ data: [] }) },
   filters: { type: Object, default: () => ({}) },
 })
 
@@ -120,11 +123,11 @@ const search = () => {
 const leadStatusLabel = (s) =>
   ({
     new: t('common.new'),
-    contacted: 'Skontaktowany',
-    qualified: 'Kwalifikowany',
-    proposal: 'Propozycja',
-    won: 'Wygrany',
-    lost: 'Przegrany',
+    contacted: t('common.contacted'),
+    qualified: t('crm.qualified'),
+    proposal: t('common.proposal'),
+    won: t('common.won'),
+    lost: t('common.lost'),
   })[s] ?? s
 
 const leadStatusClass = (s) =>

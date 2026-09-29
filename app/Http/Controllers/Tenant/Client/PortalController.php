@@ -17,8 +17,10 @@ use App\Models\Tenant\Ticket;
 use App\Services\ProposalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class PortalController extends Controller
@@ -509,5 +511,61 @@ class PortalController extends Controller
         return Inertia::render('Tenant/Client/Files', [
             'files' => $files,
         ]);
+    }
+
+    /**
+     * A contract as a PDF, for the client's own records.
+     */
+    public function contractPdf(Contract $contract)
+    {
+        $this->authorizeContact($contract->client_id);
+
+        $pdf = Pdf::loadView('pdf.contract', ['contract' => $contract->load('client')]);
+
+        return $pdf->download('umowa-' . Str::slug($contract->subject) . '.pdf');
+    }
+
+    /**
+     * An estimate as a PDF.
+     */
+    public function estimatePdf(Estimate $estimate)
+    {
+        $this->authorizeContact($estimate->client_id);
+
+        $pdf = Pdf::loadView('pdf.estimate', ['estimate' => $estimate->load(['client', 'items'])]);
+
+        return $pdf->download('wycena-' . Str::slug($estimate->number ?? (string) $estimate->id) . '.pdf');
+    }
+
+    public function notificationRead(int $notification)
+    {
+        $contact = Auth::guard('customer')->user();
+
+        DatabaseNotification::where('id', $notification)
+            ->where('notifiable_id', $contact->id)
+            ->update(['read_at' => now()]);
+
+        return back();
+    }
+
+    public function notificationReadAll()
+    {
+        $contact = Auth::guard('customer')->user();
+
+        DatabaseNotification::where('notifiable_id', $contact->id)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return back()->with('success', __('messages.marked_as_read'));
+    }
+
+    /**
+     * A portal contact may only see documents belonging to their own client.
+     */
+    private function authorizeContact(?int $clientId): void
+    {
+        $contact = Auth::guard('customer')->user();
+
+        abort_unless($contact && $clientId && $contact->client_id === $clientId, 403);
     }
 }

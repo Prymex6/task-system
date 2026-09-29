@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Tenant\Manager\Concerns\ExportsCsv;
 use App\Models\Tenant\ExpenseReport;
 use App\Models\Tenant\User;
 use App\Services\AuditService;
@@ -19,6 +20,8 @@ use Inertia\Inertia;
  */
 class ExpenseReportController extends Controller
 {
+    use ExportsCsv;
+
     public function index(Request $request)
     {
         $user = $this->user();
@@ -94,5 +97,30 @@ class ExpenseReportController extends Controller
         abort_unless($this->canApprove($user), 403);
 
         return $user;
+    }
+
+    public function export(Request $request)
+    {
+        $user = $this->user();
+        abort_unless($this->canApprove($user), 403);
+
+        $rows = ExpenseReport::with('user:id,name')
+            ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
+            ->orderByDesc('period_end')
+            ->get()
+            ->map(fn (ExpenseReport $report) => [
+                $report->title,
+                $report->user?->name,
+                $report->period_start?->toDateString(),
+                $report->period_end?->toDateString(),
+                number_format((float) $report->total_amount, 2, ',', ''),
+                $report->status,
+            ]);
+
+        return $this->streamCsv(
+            'expense-reports.csv',
+            ['Title', 'Employee', 'From', 'To', 'Amount', 'Status'],
+            $rows,
+        );
     }
 }

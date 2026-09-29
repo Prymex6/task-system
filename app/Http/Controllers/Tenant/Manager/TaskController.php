@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -360,5 +361,36 @@ class TaskController extends Controller
             ->where('is_archived', false)
             ->orderBy('name')
             ->get(['id', 'name']);
+    }
+
+    /**
+     * Move a task between board columns, and within one.
+     *
+     * The board sends the whole column after the drop rather than one index,
+     * so the order is rewritten from that list: deriving it from a single
+     * position leaves gaps the next drag has to guess at.
+     */
+    public function move(Request $request, Task $task)
+    {
+        $user = Auth::guard('tenant')->user();
+        abort_unless($user && ($user->isAdmin() || $task->project->members->contains($user->id)), 403);
+
+        $validated = $request->validate([
+            'task_status_id' => 'required|integer|exists:task_statuses,id',
+            'ordered_ids' => 'required|array',
+            'ordered_ids.*' => 'integer|exists:tasks,id',
+        ]);
+
+        DB::transaction(function () use ($task, $validated) {
+            $task->update(['task_status_id' => $validated['task_status_id']]);
+
+            foreach (array_values($validated['ordered_ids']) as $position => $id) {
+                Task::where('id', $id)
+                    ->where('project_id', $task->project_id)
+                    ->update(['order' => $position]);
+            }
+        });
+
+        return back();
     }
 }

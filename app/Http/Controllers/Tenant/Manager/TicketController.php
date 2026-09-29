@@ -146,4 +146,37 @@ class TicketController extends Controller
 
         return back()->with('success', __('messages.ticket_reopened'));
     }
+
+    /**
+     * A ticket raised from inside the workspace rather than by a client.
+     */
+    public function store(Request $request)
+    {
+        $user = Auth::guard('tenant')->user();
+        abort_unless($user, 403);
+
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:5000',
+            'client_id' => 'nullable|integer|exists:clients,id',
+            'department_id' => 'nullable|integer|exists:departments,id',
+            'priority' => 'required|in:low,medium,high,urgent',
+        ]);
+
+        $ticket = Ticket::create([
+            ...collect($validated)->except('message')->all(),
+            'number' => 'T-' . str_pad((string) (Ticket::max('id') + 1), 5, '0', STR_PAD_LEFT),
+            'status' => 'open',
+            'created_by' => $user->id,
+        ]);
+
+        $ticket->messages()->create([
+            'user_id' => $user->id,
+            'body' => $validated['message'],
+            'is_internal' => false,
+        ]);
+
+        return redirect()->route('tenant.manager.support.show', $ticket)
+            ->with('success', __('messages.ticket_created'));
+    }
 }

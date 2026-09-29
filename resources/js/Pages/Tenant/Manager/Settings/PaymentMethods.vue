@@ -113,11 +113,14 @@ const closeModal = () => {
   Object.assign(form, { name: '', description: '', is_active: true })
 }
 const save = () => {
-  if (editing.value) router.put(route('payment-methods.update', editing.value.id), form, { onSuccess: closeModal })
-  else router.post(route('payment-methods.store'), form, { onSuccess: closeModal })
+  if (editing.value)
+    router.put(route('tenant.manager.payment-methods.update', editing.value.id), form, { onSuccess: closeModal })
+  else router.post(route('tenant.manager.payment-methods.store'), form, { onSuccess: closeModal })
 }
-const toggle = (m) => router.put(route('payment-methods.update', m.id), { ...m, is_active: !m.is_active })
+const toggle = (m) =>
+  router.put(route('tenant.manager.payment-methods.update', m.id), { ...m, is_active: !m.is_active })
 const del = (m) => {
-  if (confirm(t('settings.delete_this_payment_method'))) router.delete(route('payment-methods.destroy', m.id))
+  if (confirm(t('settings.delete_this_payment_method')))
+    router.delete(route('tenant.manager.payment-methods.destroy', m.id))
 }
 </script>

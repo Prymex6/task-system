@@ -150,12 +150,12 @@ const load = () => {
 }
 
 const approve = async (row) => {
-  await axios.post(route('tenant.manager.timesheets.approve', row.approval.id))
+  await axios.post(route('tenant.manager.timesheets.approvals.approve', row.approval.id))
   load()
 }
 
 const reject = async (row) => {
-  await axios.post(route('tenant.manager.timesheets.reject', row.approval.id))
+  await axios.post(route('tenant.manager.timesheets.approvals.reject', row.approval.id))
   load()
 }
 

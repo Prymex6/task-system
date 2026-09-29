@@ -117,7 +117,7 @@ const currentFeatures = computed(() => props.tenant?.plan?.features ?? [])
 
 const changePlan = (plan) => {
   if (confirm(`Zmienić plan na ${plan.name}?`)) {
-    router.post(route('tenant.manager.billing.change-plan'), { plan_id: plan.id })
+    router.post(route('tenant.manager.settings.billing.change-plan'), { plan_id: plan.id })
   }
 }
 

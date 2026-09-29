@@ -74,19 +74,6 @@
             </Link>
 
             <Link
-              :href="route('landlord.modifications.index')"
-              :class="[
-                isActive('modifications')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                'group flex items-center px-3 py-2 text-sm font-medium border-l-4 transition-colors',
-              ]"
-            >
-              <i class="fa-solid fa-screwdriver-wrench mr-3 w-5 text-center"></i>
-              {{ $t('nav.modifications') }}
-            </Link>
-
-            <Link
               :href="route('landlord.support.index')"
               :class="[
                 isActive('support')
@@ -116,19 +103,6 @@
             >
               <i class="fa-solid fa-envelope mr-3 w-5 text-center"></i>
               {{ $t('nav.contacts') }}
-            </Link>
-
-            <Link
-              :href="route('landlord.shop-search.index')"
-              :class="[
-                isActive('shop-search')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                'group flex items-center px-3 py-2 text-sm font-medium border-l-4 transition-colors',
-              ]"
-            >
-              <i class="fa-solid fa-magnifying-glass-location mr-3 w-5 text-center"></i>
-              {{ $t('common.search_workspaces') }}
             </Link>
           </div>
         </nav>

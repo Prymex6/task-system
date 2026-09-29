@@ -124,7 +124,8 @@ const filters = reactive({
 })
 const selected = ref(null)
 
-const apply = () => router.get(route('tenant.manager.audit-log.index'), filters, { preserveState: true, replace: true })
+const apply = () =>
+  router.get(route('tenant.manager.settings.audit-log'), filters, { preserveState: true, replace: true })
 
 const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
 </script>

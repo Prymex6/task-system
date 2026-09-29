@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Tenant\Auth\TwoFactorController;
 use App\Http\Controllers\Tenant\Client\PortalController;
 use App\Http\Controllers\Tenant\Manager\ActivityController;
 use App\Http\Controllers\Tenant\Manager\AnnouncementController;
@@ -29,7 +30,6 @@ use App\Http\Controllers\Tenant\Manager\ExpenseController;
 use App\Http\Controllers\Tenant\Manager\ExpenseReportController;
 use App\Http\Controllers\Tenant\Manager\FinanceController;
 use App\Http\Controllers\Tenant\Manager\HolidayController;
-use App\Http\Controllers\Tenant\Manager\HubImpersonateController;
 use App\Http\Controllers\Tenant\Manager\IntegrationController;
 use App\Http\Controllers\Tenant\Manager\InvitationController;
 use App\Http\Controllers\Tenant\Manager\InvoiceController;
@@ -115,12 +115,22 @@ Route::middleware([
     */
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('throttle:20,1');
-    Route::get('/hub-impersonate/{token}', [HubImpersonateController::class, 'handle'])->name('hub-impersonate');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+    // Two-factor authentication
+    Route::prefix('two-factor')->name('two-factor.')->group(function () {
+        Route::get('/enable', [TwoFactorController::class, 'showEnable'])->name('enable');
+        Route::post('/enable', [TwoFactorController::class, 'enable'])->name('confirm');
+        Route::post('/disable', [TwoFactorController::class, 'disable'])->name('disable');
+        Route::get('/verify', [TwoFactorController::class, 'showVerify'])->name('challenge');
+        Route::post('/verify', [TwoFactorController::class, 'verify'])->name('verify')->middleware('throttle:10,1');
+        Route::post('/send-code', [TwoFactorController::class, 'sendCode'])->name('send-code')->middleware('throttle:5,1');
+        Route::post('/recovery-codes', [TwoFactorController::class, 'generateRecoveryCodes'])->name('recovery');
+    });
 
     // Invitation acceptance
     Route::get('/invitation/{token}', [InvitationController::class, 'show'])->name('invitation.show');
@@ -172,10 +182,10 @@ Route::middleware([
 
             // Discussions
             Route::get('/{project}/discussions', [ProjectDiscussionController::class, 'index'])->name('discussions.index');
+            Route::get('/{project}/discussions/{discussion}', [ProjectDiscussionController::class, 'show'])->name('discussions.show');
             Route::post('/{project}/discussions', [ProjectDiscussionController::class, 'store'])->name('discussions.store');
-            Route::put('/{project}/discussions/{discussion}', [ProjectDiscussionController::class, 'update'])->name('discussions.update');
             Route::delete('/{project}/discussions/{discussion}', [ProjectDiscussionController::class, 'destroy'])->name('discussions.destroy');
-            Route::post('/{project}/discussions/{discussion}/comments', [ProjectDiscussionController::class, 'storeComment'])->name('discussions.comments.store');
+            Route::post('/{project}/discussions/{discussion}/comments', [ProjectDiscussionController::class, 'addComment'])->name('discussions.comments.store');
         });
 
         // Project templates
@@ -189,7 +199,6 @@ Route::middleware([
         /* --- Tasks --- */
         Route::prefix('tasks')->name('tasks.')->group(function () {
             Route::get('/', [TaskController::class, 'index'])->name('index');
-            Route::get('/my', [TaskController::class, 'myTasks'])->name('my');
             Route::get('/kanban', [TaskController::class, 'kanban'])->name('kanban');
             Route::get('/calendar', [TaskController::class, 'calendar'])->name('calendar');
             Route::get('/gantt', [TaskController::class, 'gantt'])->name('gantt');
@@ -200,7 +209,6 @@ Route::middleware([
             Route::put('/{task}', [TaskController::class, 'update'])->name('update');
             Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
             Route::post('/{task}/move', [TaskController::class, 'move'])->name('move');
-            Route::post('/{task}/duplicate', [TaskController::class, 'duplicate'])->name('duplicate');
 
             // Comments
             Route::post('/{task}/comments', [TaskCommentController::class, 'store'])->name('comments.store');
@@ -227,7 +235,7 @@ Route::middleware([
         });
 
         // Labels
-        Route::resource('task-labels', TaskLabelController::class)->except(['show']);
+        Route::resource('task-labels', TaskLabelController::class)->except(['show', 'create', 'edit']);
 
         // Task statuses
         Route::resource('task-statuses', TaskStatusController::class)->except(['show', 'create', 'edit']);
@@ -329,7 +337,6 @@ Route::middleware([
             Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
             Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
             Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
-            Route::post('/invoices/{invoice}/mark-paid', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
             Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
             Route::post('/invoices/{invoice}/payment', [InvoicePaymentController::class, 'store'])->name('invoices.payment');
             Route::delete('/invoices/{invoice}/payments/{payment}', [InvoicePaymentController::class, 'destroy'])->name('invoices.payments.destroy');
@@ -346,6 +353,8 @@ Route::middleware([
 
             // Expense reports
             Route::get('/expense-reports', [ExpenseReportController::class, 'index'])->name('expense-reports.index');
+            Route::get('/expenses/reports', [ExpenseReportController::class, 'index'])->name('expenses.reports');
+            Route::get('/expenses/export', [ExpenseReportController::class, 'export'])->name('expenses.export');
             Route::post('/expense-reports/{report}/review', [ExpenseReportController::class, 'approve'])->name('expense-reports.review');
 
             // Estimates
@@ -390,6 +399,7 @@ Route::middleware([
             Route::get('/create', [ContractController::class, 'create'])->name('create');
             Route::post('/', [ContractController::class, 'store'])->name('store');
             Route::get('/{contract}', [ContractController::class, 'show'])->name('show');
+            Route::get('/{contract}/edit', [ContractController::class, 'edit'])->name('edit');
             Route::put('/{contract}', [ContractController::class, 'update'])->name('update');
             Route::delete('/{contract}', [ContractController::class, 'destroy'])->name('destroy');
             Route::get('/{contract}/pdf', [ContractController::class, 'pdf'])->name('pdf');
@@ -404,6 +414,7 @@ Route::middleware([
             Route::get('/create', [ProposalController::class, 'create'])->name('create');
             Route::post('/', [ProposalController::class, 'store'])->name('store');
             Route::get('/{proposal}', [ProposalController::class, 'show'])->name('show');
+            Route::get('/{proposal}/edit', [ProposalController::class, 'edit'])->name('edit');
             Route::put('/{proposal}', [ProposalController::class, 'update'])->name('update');
             Route::delete('/{proposal}', [ProposalController::class, 'destroy'])->name('destroy');
             Route::get('/{proposal}/pdf', [ProposalController::class, 'pdf'])->name('pdf');
@@ -417,9 +428,9 @@ Route::middleware([
             // Declared before the wildcard routes below: Laravel matches in
             // order, and /{model} would otherwise swallow these paths and
             // answer 404 looking for a record whose id is "types".
-            Route::resource('departments', DepartmentController::class)->except(['show']);
+            Route::resource('departments', DepartmentController::class)->except(['show', 'create', 'edit']);
             Route::resource('sla-policies', SlaPolicyController::class)->except(['show', 'create', 'edit']);
-            Route::resource('canned-responses', CannedResponseController::class)->except(['show']);
+            Route::resource('canned-responses', CannedResponseController::class)->except(['show', 'create', 'edit']);
             // Routes aligned with Vue: support.index, support.store, support.show, support.reply
             Route::get('/', [TicketController::class, 'index'])->name('index');
             Route::post('/', [TicketController::class, 'store'])->name('store');
@@ -436,15 +447,13 @@ Route::middleware([
             // Declared before the wildcard routes below: Laravel matches in
             // order, and /{model} would otherwise swallow these paths and
             // answer 404 looking for a record whose id is "types".
-            Route::resource('categories', KbCategoryController::class)->except(['show']);
+            Route::resource('categories', KbCategoryController::class)->except(['show', 'create', 'edit']);
             Route::get('/', [KbArticleController::class, 'index'])->name('index');
             Route::get('/create', [KbArticleController::class, 'create'])->name('create');
             Route::post('/', [KbArticleController::class, 'store'])->name('store');
-            Route::get('/{article}', [KbArticleController::class, 'show'])->name('show');
             Route::get('/{article}/edit', [KbArticleController::class, 'edit'])->name('edit');
             Route::put('/{article}', [KbArticleController::class, 'update'])->name('update');
             Route::delete('/{article}', [KbArticleController::class, 'destroy'])->name('destroy');
-            Route::post('/{article}/publish', [KbArticleController::class, 'publish'])->name('publish');
         });
 
         /* --- HR --- */
@@ -469,7 +478,7 @@ Route::middleware([
             Route::put('/permissions', [SettingsController::class, 'updateRolePermissions'])->name('permissions.update');
 
             // Departments
-            Route::resource('departments', DepartmentHrController::class)->except(['show']);
+            Route::resource('departments', DepartmentHrController::class)->except(['show', 'create', 'edit']);
             Route::resource('positions', PositionController::class)->except(['show', 'create', 'edit']);
 
             // Frekwencja (hr.attendance, hr.clock-in, etc.)
@@ -489,11 +498,11 @@ Route::middleware([
             Route::resource('leave-types', LeaveTypeController::class)->except(['show', 'create', 'edit']);
 
             // Announcements
-            Route::resource('announcements', AnnouncementController::class);
+            Route::resource('announcements', AnnouncementController::class)->except(['show', 'create', 'edit']);
             Route::post('/announcements/{announcement}/read', [AnnouncementController::class, 'markRead'])->name('announcements.read');
 
             // Performance reviews
-            Route::resource('performance', PerformanceReviewController::class)->except(['show']);
+            Route::resource('performance', PerformanceReviewController::class)->except(['show', 'create', 'edit']);
         });
 
         /* --- Internal chat --- */
@@ -512,23 +521,31 @@ Route::middleware([
             Route::get('/finance', [ReportFinanceController::class, 'index'])->name('finance');
             Route::get('/projects', [ReportProjectController::class, 'index'])->name('projects');
             Route::get('/staff', [ReportStaffController::class, 'index'])->name('staff');
+            Route::get('/staff/export', [ReportStaffController::class, 'export'])->name('staff.export');
             Route::get('/clients', [ReportClientController::class, 'index'])->name('clients');
-            Route::post('/export', [ReportController::class, 'export'])->name('export');
-            Route::get('/export-csv', [ReportController::class, 'exportCsv'])->name('export-csv');
+            Route::get('/clients/export', [ReportClientController::class, 'export'])->name('clients.export');
         });
 
         /* --- Automatyzacje --- */
-        Route::resource('automations', AutomationController::class)->except(['show']);
+        Route::resource('automations', AutomationController::class)->except(['show', 'edit']);
         Route::post('/automations/{automation}/toggle', [AutomationController::class, 'toggle'])->name('automations.toggle');
 
         /* --- Webhooks --- */
-        Route::resource('webhooks', WebhookController::class)->except(['show']);
+        Route::resource('webhooks', WebhookController::class)->except(['show', 'create', 'edit']);
         Route::post('/webhooks/{webhook}/test', [WebhookController::class, 'test'])->name('webhooks.test');
 
         /* --- Powiadomienia --- */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-        Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
-        Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+
+        // Timesheet approvals
+        Route::prefix('timesheets/approvals')->name('timesheets.approvals')->group(function () {
+            Route::get('/', [TimesheetApprovalController::class, 'index']);
+            Route::post('/{approval}/approve', [TimesheetApprovalController::class, 'approve'])->name('.approve');
+            Route::post('/{approval}/reject', [TimesheetApprovalController::class, 'reject'])->name('.reject');
+        });
+        Route::get('/notifications/recent', [NotificationController::class, 'recent'])->name('notifications.recent');
+        Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+        Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
         Route::post('/push-subscriptions', [PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
 
         /* --- Ustawienia --- */
@@ -649,10 +666,10 @@ Route::middleware([
             Route::get('/logowanie', [App\Http\Controllers\Tenant\Client\AuthController::class, 'showLogin'])->name('login');
             Route::post('/logowanie', [App\Http\Controllers\Tenant\Client\AuthController::class, 'login'])->name('login')->middleware('throttle:20,1');
             Route::post('/wylogowanie', [App\Http\Controllers\Tenant\Client\AuthController::class, 'logout'])->name('logout');
-            Route::get('/rejestracja', [App\Http\Controllers\Tenant\Client\AuthController::class, 'showRegister'])->name('register');
-            Route::post('/rejestracja', [App\Http\Controllers\Tenant\Client\AuthController::class, 'register'])->name('register')->middleware('throttle:10,1');
-            Route::get('/reset-hasla', [App\Http\Controllers\Tenant\Client\AuthController::class, 'forgotPassword'])->name('password.request');
+            Route::get('/reset-hasla', [App\Http\Controllers\Tenant\Client\AuthController::class, 'showForgotPassword'])->name('password.request');
             Route::post('/reset-hasla', [App\Http\Controllers\Tenant\Client\AuthController::class, 'sendResetLink'])->name('password.email');
+            Route::get('/nowe-haslo/{token}', [App\Http\Controllers\Tenant\Client\AuthController::class, 'showResetPassword'])->name('password.reset');
+            Route::post('/nowe-haslo', [App\Http\Controllers\Tenant\Client\AuthController::class, 'resetPassword'])->name('password.update');
         });
 
         Route::middleware(['auth:customer'])->name('portal.')->group(function () {
@@ -699,6 +716,12 @@ Route::middleware([
 
             // Powiadomienia
             Route::get('/notifications', [PortalController::class, 'notifications'])->name('notifications');
+            Route::post('/notifications/read-all', [PortalController::class, 'notificationReadAll'])->name('notifications.read-all');
+            Route::post('/notifications/{notification}/read', [PortalController::class, 'notificationRead'])->name('notifications.read');
+            Route::get('/files', [PortalController::class, 'files'])->name('files');
+            Route::get('/contracts/{contract}/pdf', [PortalController::class, 'contractPdf'])->name('contracts.pdf');
+            Route::get('/estimates/{estimate}/pdf', [PortalController::class, 'estimatePdf'])->name('estimates.pdf');
+            Route::post('/tickets/{ticket}/reply', [PortalController::class, 'ticketReply'])->name('tickets.reply');
 
             // Konto
             Route::get('/account', [PortalController::class, 'account'])->name('account');

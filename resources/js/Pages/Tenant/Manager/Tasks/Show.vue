@@ -425,7 +425,7 @@ const logTime = () => {
 
 const toggleChecklistItem = (item) => {
   router.put(
-    route('tenant.manager.tasks.checklist-items.update', [props.task.id, item.id]),
+    route('tenant.manager.tasks.checklists.items.update', [props.task.id, item.id]),
     { is_completed: !item.is_completed },
     { preserveScroll: true },
   )

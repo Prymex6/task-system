@@ -205,4 +205,22 @@ class EstimateController extends Controller
 
         return sprintf('WY/%d/%s/%03d', $year, $month, $count);
     }
+
+    /**
+     * An estimate is only editable while it is still a draft: once it has
+     * gone to the client, changing it under them would make the copy they
+     * are looking at wrong.
+     */
+    public function edit(Estimate $estimate)
+    {
+        $user = Auth::guard('tenant')->user();
+        abort_unless($user && ($user->isAdmin() || $user->isManager()), 403);
+        abort_unless($estimate->status === 'draft', 403, __('messages.only_draft_estimates_editable'));
+
+        return Inertia::render('Tenant/Manager/Finance/Estimates/Form', [
+            'estimate' => $estimate->load('items'),
+            'clients' => Client::orderBy('name')->get(['id', 'name', 'company_name']),
+            'taxRates' => TaxRate::orderBy('rate')->get(),
+        ]);
+    }
 }

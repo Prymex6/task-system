@@ -6,13 +6,17 @@ use Tests\TenantTestCase;
 
 class ReportsAndSettingsTest extends TenantTestCase
 {
-    public function test_reports_index_redirects_to_time_report(): void
+    /**
+     * /reports used to redirect straight to the time report, which left the
+     * other four with no way in. It is a hub now.
+     */
+    public function test_reports_index_lists_the_reports(): void
     {
         $this->actingAsManager();
 
-        $response = $this->withoutTenantMiddleware()->get(route('tenant.manager.reports.index'));
-
-        $response->assertRedirect(route('tenant.manager.reports.time'));
+        $this->withoutTenantMiddleware()
+            ->get(route('tenant.manager.reports.index'))
+            ->assertSuccessful();
     }
 
     public function test_projects_report_is_accessible(): void
