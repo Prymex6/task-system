@@ -166,6 +166,51 @@ class TranslationCatalogueTest extends TestCase
     }
 
     /**
+     * Every message has to survive vue-i18n's compiler.
+     *
+     * Its message syntax reserves two characters, and neither fails loudly. An
+     * unescaped @ opens a linked message, and the compiler throws while the
+     * page is mounting — the whole screen goes blank, with nothing but a
+     * SyntaxError in the browser console to say why. A | splits plural forms,
+     * so a message that starts with one renders as the empty first form.
+     *
+     * This is not hypothetical: 'jan@example.com' sat in the catalogue as the
+     * placeholder on the sign-in field, and it blanked the staff panel outright.
+     * PHP tests never caught it because they stub the front end out, which is
+     * exactly why the rule is checked here rather than left to a browser.
+     */
+    public function test_every_message_survives_the_vue_i18n_compiler(): void
+    {
+        $offenders = [];
+
+        foreach (self::LOCALES as $locale) {
+            $tree = json_decode(
+                file_get_contents($this->base() . "/resources/js/locales/{$locale}.json"),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+
+            foreach ($tree as $namespace => $entries) {
+                foreach ($entries as $key => $value) {
+                    // {'@'} is the documented escape, so take those out first.
+                    $bare = str_replace("{'@'}", '', (string) $value);
+
+                    if (str_contains($bare, '@')) {
+                        $offenders[] = "{$locale}.json: {$namespace}.{$key} has an unescaped @ — write it as {'@'}";
+                    }
+
+                    if (str_contains($bare, '|')) {
+                        $offenders[] = "{$locale}.json: {$namespace}.{$key} contains |, which vue-i18n reads as a plural separator";
+                    }
+                }
+            }
+        }
+
+        $this->assertSame([], $offenders, implode("\n  ", $offenders));
+    }
+
+    /**
      * Every key a component asks for has to exist, or the interface shows the
      * key itself.
      */
