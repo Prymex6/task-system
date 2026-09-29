@@ -1,12 +1,12 @@
 <template>
-  <ManagerLayout :title="isEdit ? $t('common.edit_invoice') : 'Nowa faktura'">
+  <ManagerLayout :title="isEdit ? $t('common.edit_invoice') : $t('crm.new_invoice')">
     <div class="max-w-3xl mx-auto space-y-6">
       <div class="page-header">
         <div class="flex items-center gap-3">
           <Link :href="route('tenant.manager.invoices.index')" class="btn-ghost btn-sm"
             ><i class="fa-solid fa-arrow-left"></i
           ></Link>
-          <h1 class="page-title">{{ isEdit ? $t('common.edit_invoice') : 'Nowa faktura' }}</h1>
+          <h1 class="page-title">{{ isEdit ? $t('common.edit_invoice') : $t('crm.new_invoice') }}</h1>
         </div>
       </div>
 
@@ -158,7 +158,7 @@
           <Link :href="route('tenant.manager.invoices.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ isEdit ? 'Zapisz zmiany' : $t('manager.create_invoice') }}
+            {{ isEdit ? $t('common.save_changes') : $t('manager.create_invoice') }}
           </button>
         </div>
       </form>

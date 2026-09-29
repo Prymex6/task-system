@@ -227,7 +227,7 @@ class TranslationCatalogueTest extends TestCase
             preg_match_all('/\'([^\'\\\\]*)\'/u', $source, $literals);
 
             foreach (array_unique($literals[1]) as $text) {
-                if (preg_match('/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/u', $text)) {
+                if ($this->looksPolish($text)) {
                     $offenders[] = $file->getBasename() . ': ' . $text;
                 }
             }
@@ -237,6 +237,30 @@ class TranslationCatalogueTest extends TestCase
             [],
             $offenders,
             "Polish left hard-coded in a component:\n  " . implode("\n  ", $offenders),
+        );
+    }
+
+    /**
+     * Diacritics alone are not enough.
+     *
+     * "Nowy Pracownik" and "Zapisz zmiany" carry none, and 79 strings sat in
+     * the components untranslated because the first version of this check
+     * only looked for ą/ć/ę. The word list is narrower than a language
+     * detector and that is the point: every word on it is Polish and is not
+     * also English, so a match is never a false positive.
+     */
+    private function looksPolish(string $text): bool
+    {
+        if (preg_match('/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/u', $text)) {
+            return true;
+        }
+
+        return (bool) preg_match(
+            '/\b(Nowy|Nowa|Nowe|Edytuj|Usun|Dodaj|Zapisz|Anuluj|Wybierz|Pracownik\w*|'
+            . 'Zadani\w+|Projekt\w*|Klient\w*|Faktur\w+|Wszystk\w+|Nazwa|Opis|Akcje|'
+            . 'Szukaj|Zamknij|Konto|Haslo|Rola|Kwota|Razem|Wyslij|Pobierz|Drukuj|'
+            . 'Zatwierdz|Odrzuc|Ustawienia|Uprawnienia)\b/u',
+            $text
         );
     }
 

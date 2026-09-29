@@ -51,7 +51,7 @@
                 {{ (reply.user?.name ?? 'K').charAt(0).toUpperCase() }}
               </div>
               <div>
-                <div class="text-sm font-medium text-gray-800">{{ reply.user?.name ?? 'Klient' }}</div>
+                <div class="text-sm font-medium text-gray-800">{{ reply.user?.name ?? $t('common.client') }}</div>
                 <div class="text-xs text-gray-400">{{ formatDate(reply.created_at) }}</div>
               </div>
             </div>

@@ -7,6 +7,7 @@ use App\Models\Tenant\Project;
 use App\Models\Tenant\Sprint;
 use App\Models\Tenant\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -155,5 +156,60 @@ class SprintController extends Controller
         $sprint->update(['status' => 'completed', 'end_date' => $sprint->end_date ?? now()->toDateString()]);
 
         return back()->with('success', __('messages.sprint_finished'));
+    }
+
+    /**
+     * How the sprint is burning down.
+     *
+     * The ideal line runs straight from the sprint's total points to zero
+     * across its days; the actual line is what was still open at the end of
+     * each day. Days in the future are left out rather than drawn flat, so
+     * the chart does not imply progress that has not happened.
+     */
+    public function burndown(Sprint $sprint)
+    {
+        $user = Auth::guard('tenant')->user();
+        abort_unless($user && ($user->isAdmin() || $sprint->project->members->contains($user->id)), 403);
+
+        $sprint->load(['tasks:id,sprint_id,title,story_points,completed_at']);
+
+        $totalPoints = (int) $sprint->tasks->sum('story_points');
+        $start = $sprint->start_date ? Carbon::parse($sprint->start_date) : $sprint->created_at;
+        $end = $sprint->end_date ? Carbon::parse($sprint->end_date) : $start->copy()->addWeeks(2);
+        $days = max(1, $start->diffInDays($end));
+
+        $series = [];
+        for ($day = 0; $day <= $days; $day++) {
+            $date = $start->copy()->addDays($day);
+
+            if ($date->isFuture()) {
+                break;
+            }
+
+            $burned = (int) $sprint->tasks
+                ->filter(fn ($task) => $task->completed_at && $task->completed_at->lte($date->copy()->endOfDay()))
+                ->sum('story_points');
+
+            $series[] = [
+                'date' => $date->toDateString(),
+                'ideal' => round($totalPoints - ($totalPoints / $days * $day), 1),
+                'actual' => $totalPoints - $burned,
+            ];
+        }
+
+        $completed = $sprint->tasks->whereNotNull('completed_at');
+
+        return Inertia::render('Tenant/Manager/Sprints/Burndown', [
+            'sprint' => $sprint->only(['id', 'name', 'status', 'start_date', 'end_date']) + [
+                'tasks' => $sprint->tasks,
+            ],
+            'stats' => [
+                'total_tasks' => $sprint->tasks->count(),
+                'completed_tasks' => $completed->count(),
+                'total_points' => $totalPoints,
+                'remaining_points' => $totalPoints - (int) $completed->sum('story_points'),
+            ],
+            'burndown' => $series,
+        ]);
     }
 }

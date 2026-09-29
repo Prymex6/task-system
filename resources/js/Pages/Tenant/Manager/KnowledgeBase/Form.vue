@@ -72,7 +72,7 @@
           <Link :href="route('tenant.manager.kb.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ isEdit ? 'Zapisz zmiany' : $t('common.create_article') }}
+            {{ isEdit ? $t('common.save_changes') : $t('common.create_article') }}
           </button>
         </div>
       </form>

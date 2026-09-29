@@ -1,11 +1,13 @@
 <template>
-  <ManagerLayout :title="project ? 'Edytuj projekt' : 'Nowy projekt'">
+  <ManagerLayout :title="project ? $t('common.edit_project') : $t('crm.new_project')">
     <div class="max-w-3xl mx-auto space-y-6">
       <div class="flex items-center gap-3">
         <Link :href="route('tenant.manager.projects.index')" class="text-gray-400 hover:text-gray-600">
           <i class="fa-solid fa-arrow-left"></i>
         </Link>
-        <h1 class="text-2xl font-bold text-gray-900">{{ project ? 'Edytuj projekt' : 'Nowy projekt' }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">
+          {{ project ? $t('common.edit_project') : $t('crm.new_project') }}
+        </h1>
       </div>
 
       <form @submit.prevent="submit" class="space-y-5">
@@ -124,7 +126,7 @@
           <Link :href="route('tenant.manager.projects.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin mr-1"></i>
-            {{ project ? 'Zapisz zmiany' : $t('projects.create_project') }}
+            {{ project ? $t('common.save_changes') : $t('projects.create_project') }}
           </button>
         </div>
       </form>

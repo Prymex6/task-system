@@ -57,7 +57,9 @@
       @click.self="editing = null"
     >
       <form class="bg-white rounded-xl w-full max-w-md p-5 space-y-4" @submit.prevent="save">
-        <h2 class="text-lg font-semibold text-gray-900">{{ editing.id ? 'Edytuj kontakt' : 'Nowy kontakt' }}</h2>
+        <h2 class="text-lg font-semibold text-gray-900">
+          {{ editing.id ? $t('common.edit_contact') : $t('common.new_contact') }}
+        </h2>
 
         <FormField :label="$t('common.full_name')" :error="form.errors.name" required>
           <input v-model="form.name" type="text" class="input" required />

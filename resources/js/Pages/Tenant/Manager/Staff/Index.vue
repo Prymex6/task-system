@@ -136,7 +136,7 @@
     >
       <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
         <h3 class="text-lg font-medium text-gray-900 mb-4">
-          {{ editingStaff ? 'Edytuj Pracownika' : 'Nowy Pracownik' }}
+          {{ editingStaff ? $t('common.edit_employee') : $t('common.new_employee') }}
         </h3>
         <form @submit.prevent="saveStaff">
           <div class="space-y-4">
@@ -224,7 +224,7 @@
               :disabled="form.processing"
               class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
             >
-              {{ form.processing ? 'Zapisywanie...' : 'Zapisz' }}
+              {{ form.processing ? 'Zapisywanie...' : $t('common.save') }}
             </button>
           </div>
         </form>
@@ -271,7 +271,7 @@ const roleLabel = (role) => {
   const labels = {
     admin: 'Administrator',
     manager: 'Manager',
-    member: 'Pracownik',
+    member: t('common.employee'),
     guest: t('manager.guest'),
   }
   return labels[role] || role

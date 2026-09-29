@@ -37,13 +37,13 @@
         <NavItem
           :href="route('tenant.manager.projects.index')"
           icon="fa-solid fa-folder-open"
-          :label="sidebarOpen ? 'Projekty' : ''"
+          :label="sidebarOpen ? $t('common.projects') : ''"
           :active="isActive('projects')"
         />
         <NavItem
           :href="route('tenant.manager.tasks.index')"
           icon="fa-solid fa-list-check"
-          :label="sidebarOpen ? 'Zadania' : ''"
+          :label="sidebarOpen ? $t('common.tasks') : ''"
           :active="isActive('tasks')"
         />
         <NavItem
@@ -89,7 +89,7 @@
         <NavItem
           :href="route('tenant.manager.invoices.index')"
           icon="fa-solid fa-file-invoice-dollar"
-          :label="sidebarOpen ? 'Faktury' : ''"
+          :label="sidebarOpen ? $t('common.invoices') : ''"
           :active="isActive('invoices')"
         />
         <NavItem
@@ -188,7 +188,7 @@
         <NavItem
           :href="route('tenant.manager.settings.index')"
           icon="fa-solid fa-gear"
-          :label="sidebarOpen ? 'Ustawienia' : ''"
+          :label="sidebarOpen ? $t('common.settings') : ''"
           :active="isActive('settings')"
         />
       </nav>

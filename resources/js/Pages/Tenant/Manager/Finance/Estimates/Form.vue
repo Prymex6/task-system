@@ -1,12 +1,12 @@
 <template>
-  <ManagerLayout :title="isEdit ? $t('common.edit_estimate') : 'Nowa wycena'">
+  <ManagerLayout :title="isEdit ? $t('common.edit_estimate') : $t('finance.new_estimate')">
     <div class="max-w-3xl mx-auto space-y-6">
       <div class="page-header">
         <div class="flex items-center gap-3">
           <Link :href="route('tenant.manager.estimates.index')" class="btn-ghost btn-sm"
             ><i class="fa-solid fa-arrow-left"></i
           ></Link>
-          <h1 class="page-title">{{ isEdit ? $t('common.edit_estimate') : 'Nowa wycena' }}</h1>
+          <h1 class="page-title">{{ isEdit ? $t('common.edit_estimate') : $t('finance.new_estimate') }}</h1>
         </div>
       </div>
 
@@ -151,7 +151,7 @@
           <Link :href="route('tenant.manager.estimates.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ isEdit ? 'Zapisz zmiany' : $t('common.create_estimate') }}
+            {{ isEdit ? $t('common.save_changes') : $t('common.create_estimate') }}
           </button>
         </div>
       </form>

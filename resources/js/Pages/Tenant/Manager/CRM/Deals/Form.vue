@@ -1,8 +1,8 @@
 <template>
-  <ManagerLayout :title="isEdit ? 'Edycja szansy' : 'Nowa szansa'">
+  <ManagerLayout :title="isEdit ? 'Edycja szansy' : $t('common.new_deal')">
     <form class="max-w-3xl space-y-5" @submit.prevent="submit">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? 'Edycja szansy' : 'Nowa szansa' }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? 'Edycja szansy' : $t('common.new_deal') }}</h1>
         <p class="text-sm text-gray-500 mt-0.5">{{ $t('crm.a_specific_piece_of_business_with') }}</p>
       </div>
 
@@ -39,7 +39,7 @@
 
       <div class="flex items-center gap-3">
         <button type="submit" class="btn-primary" :disabled="form.processing">
-          {{ isEdit ? 'Zapisz zmiany' : $t('common.add_deal') }}
+          {{ isEdit ? $t('common.save_changes') : $t('common.add_deal') }}
         </button>
         <Link :href="route('tenant.manager.deals.index')" class="btn-ghost">{{ $t('common.cancel') }}</Link>
       </div>

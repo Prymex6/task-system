@@ -46,7 +46,7 @@
       >
         <div class="bg-white rounded-xl shadow-xl w-[500px] p-5 max-h-[90vh] overflow-y-auto">
           <h3 class="font-semibold text-gray-900 mb-4">
-            {{ editing ? 'Edytuj szablon' : $t('common.new_task_template') }}
+            {{ editing ? $t('common.edit_template') : $t('common.new_task_template') }}
           </h3>
           <form @submit.prevent="save" class="space-y-4">
             <div>

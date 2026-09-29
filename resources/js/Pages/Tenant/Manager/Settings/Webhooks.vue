@@ -126,10 +126,10 @@ const showCreate = ref(false)
 const form = reactive({ url: '', secret: '', events: [] })
 
 const eventLabels = {
-  'task.created': 'Zadanie utworzone',
+  'task.created': t('common.task_created'),
   'task.status_changed': 'Zmiana statusu zadania',
   'invoice.paid': t('common.invoice_paid'),
-  'ticket.created': 'Nowy ticket',
+  'ticket.created': t('automations.a_ticket_is_opened'),
   'ticket.closed': t('automations.a_ticket_is_closed'),
   'deal.stage_changed': 'Zmiana etapu deala',
   'project.completed': t('automations.a_project_is_completed'),

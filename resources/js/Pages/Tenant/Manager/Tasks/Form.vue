@@ -1,11 +1,11 @@
 <template>
-  <ManagerLayout :title="task ? 'Edytuj zadanie' : 'Nowe zadanie'">
+  <ManagerLayout :title="task ? $t('common.edit_task') : $t('common.new_task')">
     <div class="max-w-3xl mx-auto space-y-5">
       <div class="flex items-center gap-3">
         <Link :href="route('tenant.manager.tasks.index')" class="text-gray-400 hover:text-gray-600">
           <i class="fa-solid fa-arrow-left"></i>
         </Link>
-        <h1 class="text-2xl font-bold text-gray-900">{{ task ? 'Edytuj zadanie' : 'Nowe zadanie' }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">{{ task ? $t('common.edit_task') : $t('common.new_task') }}</h1>
       </div>
 
       <form @submit.prevent="submit" class="space-y-5">
@@ -135,7 +135,7 @@
           <Link :href="route('tenant.manager.tasks.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin mr-1"></i>
-            {{ task ? 'Zapisz zmiany' : $t('common.create_task') }}
+            {{ task ? $t('common.save_changes') : $t('common.create_task') }}
           </button>
         </div>
       </form>

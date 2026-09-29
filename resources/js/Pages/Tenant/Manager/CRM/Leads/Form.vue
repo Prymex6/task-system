@@ -1,8 +1,8 @@
 <template>
-  <ManagerLayout :title="isEdit ? 'Edycja leada' : 'Nowy lead'">
+  <ManagerLayout :title="isEdit ? 'Edycja leada' : $t('common.new_lead')">
     <form class="max-w-3xl space-y-5" @submit.prevent="submit">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? 'Edycja leada' : 'Nowy lead' }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? 'Edycja leada' : $t('common.new_lead') }}</h1>
         <p class="text-sm text-gray-500 mt-0.5">{{ $t('crm.a_prospect_before_they_become_a') }}</p>
       </div>
 
@@ -49,7 +49,7 @@
 
       <div class="flex items-center gap-3">
         <button type="submit" class="btn-primary" :disabled="form.processing">
-          {{ isEdit ? 'Zapisz zmiany' : 'Dodaj leada' }}
+          {{ isEdit ? $t('common.save_changes') : $t('common.add_lead') }}
         </button>
         <Link :href="route('tenant.manager.leads.index')" class="btn-ghost">{{ $t('common.cancel') }}</Link>
       </div>

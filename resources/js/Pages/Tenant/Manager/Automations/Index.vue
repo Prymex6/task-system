@@ -217,7 +217,7 @@
             <button type="button" @click="closeModal" class="btn-secondary">{{ $t('common.cancel') }}</button>
             <button type="submit" :disabled="form.processing || form.actions.length === 0" class="btn-primary">
               <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-              {{ editingRule ? 'Zapisz zmiany' : $t('common.create_rule') }}
+              {{ editingRule ? $t('common.save_changes') : $t('common.create_rule') }}
             </button>
           </div>
         </form>
@@ -368,7 +368,7 @@ const actionLabel = (type) =>
     assign_to: 'Przypisz do',
     change_status: t('common.change_status_to'),
     change_priority: t('common.change_priority_to'),
-    add_tag: 'Dodaj tag',
+    add_tag: t('automations.add_a_tag'),
     send_notification: 'Powiadom',
     move_to_project: t('automations.move_to_a_project'),
     set_due_date: 'Ustaw termin',

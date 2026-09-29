@@ -114,11 +114,11 @@ const save = async () => {
 // Grouped actions
 const groupedActions = [
   {
-    name: 'Projekty',
+    name: t('common.projects'),
     actions: ['projects.view', 'projects.create', 'projects.edit', 'projects.delete', 'projects.manage_members'],
   },
   {
-    name: 'Zadania',
+    name: t('common.tasks'),
     actions: ['tasks.view', 'tasks.create', 'tasks.edit', 'tasks.delete', 'tasks.assign', 'tasks.log_time'],
   },
   { name: 'CRM', actions: ['crm.clients.view', 'crm.clients.manage', 'crm.leads.manage', 'crm.deals.manage'] },
@@ -135,7 +135,7 @@ const groupedActions = [
   { name: 'Support', actions: ['tickets.view', 'tickets.manage', 'kb.manage'] },
   { name: 'HR', actions: ['hr.attendance.view_all', 'hr.leave.approve', 'hr.staff.manage'] },
   { name: 'Raporty', actions: ['reports.view', 'reports.finance'] },
-  { name: 'Ustawienia', actions: ['settings.manage'] },
+  { name: t('common.settings'), actions: ['settings.manage'] },
 ]
 
 const roleLabel = (r) =>
@@ -147,12 +147,12 @@ const actionLabel = (action) => {
   const labels = {
     'projects.view': t('common.view_projects'),
     'projects.create': t('common.create_projects'),
-    'projects.edit': 'Edytuj projekty',
+    'projects.edit': t('common.edit_projects'),
     'projects.delete': t('common.delete_projects'),
     'projects.manage_members': t('common.manage_members'),
     'tasks.view': t('common.view_tasks'),
     'tasks.create': t('common.create_tasks'),
-    'tasks.edit': 'Edytuj zadania',
+    'tasks.edit': t('common.edit_tasks'),
     'tasks.delete': t('common.delete_tasks'),
     'tasks.assign': 'Przypisuj zadania',
     'tasks.log_time': 'Loguj czas',
@@ -173,7 +173,7 @@ const actionLabel = (action) => {
     'hr.staff.manage': t('common.manage_staff'),
     'reports.view': t('common.view_reports'),
     'reports.finance': 'Raporty finansowe',
-    'settings.manage': 'Ustawienia workspace',
+    'settings.manage': t('common.workspace_settings'),
   }
   return labels[action] ?? action
 }

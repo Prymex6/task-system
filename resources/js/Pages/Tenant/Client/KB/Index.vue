@@ -21,12 +21,12 @@
       <!-- Categories -->
       <div v-if="categories.length" class="flex flex-wrap gap-2">
         <button
-          v-for="cat in ['Wszystkie', ...categories]"
+          v-for="cat in [$t('common.all'), ...categories]"
           :key="cat"
-          @click="selectedCategory = cat === 'Wszystkie' ? '' : cat"
+          @click="selectedCategory = cat === $t('common.all') ? '' : cat"
           class="px-3 py-1.5 text-sm rounded-lg border transition-colors"
           :class="
-            (cat === 'Wszystkie' && !selectedCategory) || selectedCategory === cat
+            (cat === $t('common.all') && !selectedCategory) || selectedCategory === cat
               ? 'bg-indigo-600 text-white border-indigo-600'
               : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
           "

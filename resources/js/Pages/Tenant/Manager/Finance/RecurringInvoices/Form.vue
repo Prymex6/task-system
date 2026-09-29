@@ -1,9 +1,9 @@
 <template>
-  <ManagerLayout :title="isEdit ? 'Edycja zlecenia' : 'Nowe zlecenie cykliczne'">
+  <ManagerLayout :title="isEdit ? 'Edycja zlecenia' : $t('common.new_recurring_invoice')">
     <form class="max-w-3xl space-y-5" @submit.prevent="submit">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">
-          {{ isEdit ? 'Edycja zlecenia' : 'Nowe zlecenie cykliczne' }}
+          {{ isEdit ? 'Edycja zlecenia' : $t('common.new_recurring_invoice') }}
         </h1>
         <p class="text-sm text-gray-500 mt-0.5">
           {{ $t('finance.the_lines_are_saved_as_a') }}
@@ -101,7 +101,7 @@
 
       <div class="flex items-center gap-3">
         <button type="submit" class="btn-primary" :disabled="form.processing">
-          {{ isEdit ? 'Zapisz zmiany' : $t('common.create_schedule') }}
+          {{ isEdit ? $t('common.save_changes') : $t('common.create_schedule') }}
         </button>
         <Link :href="route('tenant.manager.recurring-invoices.index')" class="btn-ghost">{{
           $t('common.cancel')

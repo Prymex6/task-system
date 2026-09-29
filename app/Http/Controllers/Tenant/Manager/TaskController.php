@@ -9,6 +9,8 @@ use App\Models\Tenant\TaskLabel;
 use App\Models\Tenant\TaskStatus;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -278,5 +280,85 @@ class TaskController extends Controller
             'project' => $request->filled('project_id') ? Project::find($request->project_id) : null,
             'filters' => $request->only(['project_id']),
         ]);
+    }
+
+    /**
+     * Tasks on a timeline, for one project at a time.
+     *
+     * A Gantt chart of every project at once is unreadable, so a project has
+     * to be chosen before there is anything to draw.
+     */
+    public function gantt(Request $request)
+    {
+        $user = Auth::guard('tenant')->user();
+
+        $projects = $this->visibleProjects($user);
+
+        $projectId = $request->integer('project_id') ?: $projects->first()?->id;
+
+        $tasks = $projectId
+            ? Task::where('project_id', $projectId)
+                ->whereNotNull('start_date')
+                ->orWhere(fn ($q) => $q->where('project_id', $projectId)->whereNotNull('due_date'))
+                ->orderBy('start_date')
+                ->orderBy('due_date')
+                ->get(['id', 'title', 'priority', 'start_date', 'due_date', 'completed_at'])
+            : collect();
+
+        return Inertia::render('Tenant/Manager/Tasks/Gantt', [
+            'tasks' => $tasks->map(fn (Task $task) => [
+                ...$task->only(['id', 'title', 'priority', 'start_date', 'due_date']),
+                'is_completed' => $task->completed_at !== null,
+            ])->values(),
+            'projects' => $projects,
+            'filters' => ['project_id' => $projectId],
+        ]);
+    }
+
+    /**
+     * Tasks by due date, for the month the calendar is showing.
+     */
+    public function calendar(Request $request)
+    {
+        $user = Auth::guard('tenant')->user();
+
+        $month = $request->filled('month')
+            ? Carbon::parse($request->query('month'))
+            : now();
+
+        $tasks = Task::with('status:id,name,color')
+            ->whereNotNull('due_date')
+            ->whereBetween('due_date', [
+                $month->copy()->startOfMonth()->toDateString(),
+                $month->copy()->endOfMonth()->toDateString(),
+            ])
+            ->when(!$user->isAdmin(), fn ($q) => $q->whereHas(
+                'project',
+                fn ($p) => $p->whereHas('members', fn ($m) => $m->where('user_id', $user->id))
+            ))
+            ->get(['id', 'title', 'due_date', 'task_status_id', 'completed_at']);
+
+        return Inertia::render('Tenant/Manager/Tasks/Calendar', [
+            'tasks' => $tasks->map(fn (Task $task) => [
+                'id' => $task->id,
+                'title' => $task->title,
+                'due_date' => $task->due_date?->toDateString(),
+                'status' => $task->status?->only(['id', 'name', 'color']),
+                'is_completed' => $task->completed_at !== null,
+            ])->values(),
+            'month' => $month->toDateString(),
+        ]);
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    private function visibleProjects($user)
+    {
+        return Project::query()
+            ->when(!$user->isAdmin(), fn ($q) => $q->whereHas('members', fn ($m) => $m->where('user_id', $user->id)))
+            ->where('is_archived', false)
+            ->orderBy('name')
+            ->get(['id', 'name']);
     }
 }

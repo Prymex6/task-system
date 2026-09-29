@@ -170,7 +170,7 @@
               :disabled="form.processing"
               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50"
             >
-              {{ editing ? 'Zapisz' : $t('projects.create') }}
+              {{ editing ? $t('common.save') : $t('projects.create') }}
             </button>
           </div>
         </form>

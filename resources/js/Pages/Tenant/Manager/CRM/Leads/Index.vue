@@ -119,7 +119,7 @@ const search = () => {
 
 const leadStatusLabel = (s) =>
   ({
-    new: 'Nowy',
+    new: t('common.new'),
     contacted: 'Skontaktowany',
     qualified: 'Kwalifikowany',
     proposal: 'Propozycja',

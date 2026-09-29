@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Tenant\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Automation;
+use App\Models\Tenant\TaskStatus;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Webhook;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class AutomationController extends Controller
@@ -72,5 +76,26 @@ class AutomationController extends Controller
         $automation->update(['is_active' => !$automation->is_active]);
 
         return back()->with('success', $automation->is_active ? 'Reguła aktywowana.' : 'Reguła wyłączona.');
+    }
+
+    /**
+     * The builder needs the things a rule can point at: who to assign to,
+     * which status to move a task to, and which webhook to call.
+     */
+    public function create()
+    {
+        $this->authorizeAdmin();
+
+        return Inertia::render('Tenant/Manager/Automations/Create', [
+            'staff' => User::where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'statuses' => TaskStatus::orderBy('order')->get(['id', 'name', 'color']),
+            'webhooks' => Webhook::where('is_active', true)->get(['id', 'name', 'url']),
+        ]);
+    }
+
+    private function authorizeAdmin(): void
+    {
+        $user = Auth::guard('tenant')->user();
+        abort_unless($user && $user->isAdmin(), 403);
     }
 }

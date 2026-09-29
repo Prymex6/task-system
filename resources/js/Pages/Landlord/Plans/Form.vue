@@ -1,9 +1,9 @@
 <template>
-  <LandlordLayout :title="plan ? 'Edytuj plan' : 'Nowy plan'">
+  <LandlordLayout :title="plan ? $t('common.edit_plan') : $t('common.new_plan')">
     <div class="py-12">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-8">
-          {{ plan ? 'Edytuj plan' : 'Nowy plan abonamentowy' }}
+          {{ plan ? $t('common.edit_plan') : $t('common.new_subscription_plan') }}
         </h1>
 
         <form @submit.prevent="submit" class="bg-white shadow rounded-lg p-6 space-y-6">
@@ -73,7 +73,7 @@
 
           <div class="flex gap-3 pt-2">
             <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
-              {{ plan ? 'Zapisz zmiany' : $t('common.create_plan') }}
+              {{ plan ? $t('common.save_changes') : $t('common.create_plan') }}
             </button>
             <Link
               :href="route('landlord.plans.index')"

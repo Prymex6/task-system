@@ -49,7 +49,9 @@
         @click.self="closeModal"
       >
         <div class="bg-white rounded-xl shadow-xl w-72 p-5">
-          <h3 class="font-semibold text-gray-900 mb-4">{{ editing ? 'Edytuj tag' : 'Nowy tag' }}</h3>
+          <h3 class="font-semibold text-gray-900 mb-4">
+            {{ editing ? $t('common.edit_tag') : $t('settings.new_tag') }}
+          </h3>
           <form @submit.prevent="save" class="space-y-3">
             <div>
               <label class="label">{{ $t('common.name') }}</label>

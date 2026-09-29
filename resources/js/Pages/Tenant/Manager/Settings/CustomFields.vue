@@ -138,7 +138,13 @@ const grouped = computed(() => {
 })
 
 const modelLabel = (m) =>
-  ({ task: 'Zadania', project: 'Projekty', client: 'Klienci', lead: 'Leady', invoice: 'Faktury' })[m] ?? m
+  ({
+    task: t('common.tasks'),
+    project: t('common.projects'),
+    client: 'Klienci',
+    lead: 'Leady',
+    invoice: t('common.invoices'),
+  })[m] ?? m
 const fieldTypeLabel = (t) =>
   ({
     text: t('settings.text'),

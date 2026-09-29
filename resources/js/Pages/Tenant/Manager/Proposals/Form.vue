@@ -1,12 +1,12 @@
 <template>
-  <ManagerLayout :title="isEdit ? $t('common.edit_proposal') : 'Nowa propozycja'">
+  <ManagerLayout :title="isEdit ? $t('common.edit_proposal') : $t('manager.new_proposal')">
     <div class="max-w-3xl mx-auto space-y-6">
       <div class="page-header">
         <div class="flex items-center gap-3">
           <Link :href="route('tenant.manager.proposals.index')" class="btn-ghost btn-sm"
             ><i class="fa-solid fa-arrow-left"></i
           ></Link>
-          <h1 class="page-title">{{ isEdit ? $t('common.edit_proposal') : 'Nowa propozycja' }}</h1>
+          <h1 class="page-title">{{ isEdit ? $t('common.edit_proposal') : $t('manager.new_proposal') }}</h1>
         </div>
       </div>
 
@@ -77,7 +77,7 @@
           <Link :href="route('tenant.manager.proposals.index')" class="btn-secondary">{{ $t('common.cancel') }}</Link>
           <button type="submit" :disabled="form.processing" class="btn-primary">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ isEdit ? 'Zapisz zmiany' : $t('common.create_proposal') }}
+            {{ isEdit ? $t('common.save_changes') : $t('common.create_proposal') }}
           </button>
         </div>
       </form>

@@ -272,7 +272,7 @@ const statusClass = (s) =>
 
 const statusLabel = (s) =>
   ({
-    new: 'Nowy',
+    new: t('common.new'),
     contacted: 'Skontaktowany',
     demo: 'Demo',
     trial: 'Trial',

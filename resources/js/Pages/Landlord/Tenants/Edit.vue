@@ -149,7 +149,7 @@
             :disabled="form.processing"
             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
           >
-            {{ form.processing ? 'Zapisywanie...' : 'Zapisz zmiany' }}
+            {{ form.processing ? 'Zapisywanie...' : $t('common.save_changes') }}
           </button>
         </div>
       </form>
