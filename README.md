@@ -217,16 +217,28 @@ npx playwright test           # 33 end-to-end specs
 
 The suite runs against a **real MySQL database rather than SQLite**: the schema uses enum
 columns throughout, and the finance reports group with `DATE_FORMAT`, which SQLite has no
-equivalent for. `phpunit.xml` expects a `tasksystem_test` database on the `mysql` connection,
-migrated once up front — `TenantTestCase` rolls back per test rather than migrating:
+equivalent for. The tables are built once up front — `TenantTestCase` rolls back per test
+rather than migrating — and it takes **two** databases:
 
 ```bash
+# What phpunit.xml points every connection at by default.
 DB_DATABASE=tasksystem_test php artisan migrate --path=database/migrations/tenant --force
 DB_DATABASE=tasksystem_test php artisan migrate --path=database/migrations/landlord --force
+
+# LandlordTestCase repoints 'central' here.
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS tasksystem_central_test"
+DB_DATABASE=tasksystem_central_test php artisan migrate --path=database/migrations/landlord --database=central --force
 ```
 
-Both sets go into the one test database. In production they are separate databases, which is
-why the landlord table that would otherwise collide is named `platform_ticket_messages`.
+Both sets go into the first one because tenant screens read landlord tables through the
+`central` connection — the billing screen lists the subscription plans — and outside
+`LandlordTestCase` that connection resolves to whatever `DB_DATABASE` names. The landlord
+tests need a database to themselves because a few table names exist in both schemas; in
+production those are separate databases anyway, which is why the landlord table that would
+otherwise collide is named `platform_ticket_messages`.
+
+`.github/workflows/ci.yml` performs exactly these steps, so a green run there means the same
+commands work from a clean checkout.
 
 The suite does not need the front end to have been built. Every page renders through
 `app.blade.php`, which asks Vite for a manifest, so the base `TestCase` stubs Vite out —
