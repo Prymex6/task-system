@@ -1362,6 +1362,7 @@
     "choose_a_project_to_see_its": "Wybierz projekt aby zobaczyć wykres Gantta",
     "comments": "Komentarze",
     "created_by": "Twórca",
+    "daily": "Codziennie",
     "default": "— Domyślny —",
     "delete_this_template": "Usunąć szablon?",
     "description_optional": "Opis (opcjonalnie)",
@@ -1378,7 +1379,9 @@
     "low": "Niskie",
     "medium": "Średnie",
     "milestone": "Kamień milowy",
+    "monthly": "Co miesiąc",
     "next_due": "Następny termin",
+    "no_limit": "Bez limitu",
     "no_recurring_tasks": "Brak powtarzających się zadań",
     "no_tasks_match_these_filters": "Brak zadań pasujących do filtrów",
     "no_templates_yet_create_the_first": "Brak szablonów — utwórz pierwszy",
@@ -1403,7 +1406,9 @@
     "today": "Dziś",
     "unassigned": "Nieprzypisane",
     "urgent": "Pilne",
-    "what_needs_doing": "Czego dotyczy zadanie?"
+    "weekly": "Co tydzień",
+    "what_needs_doing": "Czego dotyczy zadanie?",
+    "yearly": "Co rok"
   },
   "time": {
     "active_staff": "Aktywni pracownicy",

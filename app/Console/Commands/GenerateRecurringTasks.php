@@ -3,23 +3,22 @@
 namespace App\Console\Commands;
 
 use App\Models\Landlord\Tenant;
-use App\Services\InvoiceService;
-use App\Services\RecurringInvoiceService;
+use App\Services\TaskRecurringService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Daily billing housekeeping, run once per tenant.
+ * Creates the next copy of every task whose schedule has come round.
  *
- * Each tenant is handled in isolation: a failure in one is logged and the run
- * continues, because one broken workspace must not stop everyone else from
- * being invoiced.
+ * Runs once per tenant, each in isolation: a failure in one is logged and the
+ * run carries on, because one broken workspace must not stop everyone else's
+ * tasks from being created.
  */
-class RunBillingCycle extends Command
+class GenerateRecurringTasks extends Command
 {
-    protected $signature = 'billing:cycle {tenant? : Limit the run to one tenant ID}';
+    protected $signature = 'tasks:recurring {tenant? : Limit the run to one tenant ID}';
 
-    protected $description = 'Issue due recurring invoices and flag overdue ones';
+    protected $description = 'Create the next occurrence of every task that is due to repeat';
 
     public function handle(): int
     {
@@ -39,14 +38,13 @@ class RunBillingCycle extends Command
             try {
                 tenancy()->initialize($tenant);
 
-                $issued = RecurringInvoiceService::processDue();
-                InvoiceService::checkOverdue();
+                $created = TaskRecurringService::generateDue();
 
-                $this->line(sprintf('  %s: issued %d', $tenant->id, $issued));
+                $this->line(sprintf('  %s: created %d', $tenant->id, $created));
             } catch (\Throwable $e) {
                 $failed++;
                 $this->error(sprintf('  %s: %s', $tenant->id, $e->getMessage()));
-                Log::error('billing:cycle failed', ['tenant' => $tenant->id, 'error' => $e->getMessage()]);
+                Log::error('tasks:recurring failed', ['tenant' => $tenant->id, 'error' => $e->getMessage()]);
             } finally {
                 tenancy()->end();
             }

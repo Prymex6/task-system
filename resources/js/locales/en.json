@@ -1362,6 +1362,7 @@
     "choose_a_project_to_see_its": "Choose a project to see its Gantt chart",
     "comments": "Comments",
     "created_by": "Created by",
+    "daily": "Daily",
     "default": "— default —",
     "delete_this_template": "Delete this template?",
     "description_optional": "Description (optional)",
@@ -1378,7 +1379,9 @@
     "low": "Low",
     "medium": "Medium",
     "milestone": "Milestone",
+    "monthly": "Monthly",
     "next_due": "Next due",
+    "no_limit": "No end date",
     "no_recurring_tasks": "No recurring tasks",
     "no_tasks_match_these_filters": "No tasks match these filters",
     "no_templates_yet_create_the_first": "No templates yet — create the first one",
@@ -1403,7 +1406,9 @@
     "today": "Today",
     "unassigned": "Unassigned",
     "urgent": "Urgent",
-    "what_needs_doing": "What needs doing?"
+    "weekly": "Weekly",
+    "what_needs_doing": "What needs doing?",
+    "yearly": "Yearly"
   },
   "time": {
     "active_staff": "Active staff",

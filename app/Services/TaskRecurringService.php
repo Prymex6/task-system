@@ -6,31 +6,63 @@ use App\Models\Tenant\Task;
 use App\Models\Tenant\TaskRecurring;
 use Carbon\Carbon;
 
+/**
+ * Repeating tasks.
+ *
+ * A task repeats because a row exists for it in task_recurring, not because of
+ * a flag on the task itself: stopping the repetition deletes the row, which is
+ * why nothing here looks for an "active" column.
+ *
+ * Every schedule carries a frequency and an interval, so "every second week" is
+ * weekly with an interval of two rather than a frequency of its own.
+ */
 class TaskRecurringService
 {
-    public static function generateDue(): void
+    /** @var list<string> */
+    public const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
+
+    /**
+     * Clone every task whose next occurrence has come round.
+     *
+     * @return int how many tasks were created
+     */
+    public static function generateDue(): int
     {
-        $recurring = TaskRecurring::with('task')
-            ->where('is_active', true)
-            ->where(function ($q) {
-                $q->whereNull('ends_at')->orWhere('ends_at', '>=', today());
-            })
-            ->where('next_run_at', '<=', now())
+        $due = TaskRecurring::with('task')
+            ->whereNotNull('next_occurrence')
+            ->whereDate('next_occurrence', '<=', today())
+            ->where(fn ($q) => $q->whereNull('ends_at')->orWhereDate('ends_at', '>=', today()))
             ->get();
 
-        foreach ($recurring as $config) {
-            static::createNextTask($config);
-            $config->update(['next_run_at' => static::calcNextRun($config)]);
+        $created = 0;
+
+        foreach ($due as $schedule) {
+            // The task can be gone even though the cascade should have taken
+            // the schedule with it; skipping beats a null reference in a job
+            // that has other rows to get through.
+            if (!$schedule->task) {
+                continue;
+            }
+
+            static::createNextTask($schedule);
+
+            $schedule->update([
+                'next_occurrence' => static::advance($schedule->frequency, $schedule->interval, $schedule->next_occurrence),
+            ]);
+
+            $created++;
         }
+
+        return $created;
     }
 
-    public static function createNextTask(TaskRecurring $config): Task
+    public static function createNextTask(TaskRecurring $schedule): Task
     {
-        $source = $config->task;
+        $source = $schedule->task;
 
         $clone = $source->replicate(['completed_at', 'created_at', 'updated_at']);
         $clone->created_by = $source->created_by;
-        $clone->due_date = static::calcDueDate($config);
+        $clone->due_date = $source->due_date ? $schedule->next_occurrence?->toDateString() : null;
         $clone->start_date = null;
         $clone->save();
 
@@ -41,45 +73,18 @@ class TaskRecurringService
     }
 
     /**
-     * When a task repeating at this frequency comes round again.
+     * When a schedule at this frequency next comes round.
      */
-    public static function nextRunAt(string $frequency, ?Carbon $from = null): Carbon
+    public static function advance(string $frequency, int $interval = 1, ?Carbon $from = null): Carbon
     {
-        $from ??= now();
+        $from = $from ? $from->copy() : today();
+        $interval = max(1, $interval);
 
         return match ($frequency) {
-            'daily' => $from->copy()->addDay(),
-            'weekly' => $from->copy()->addWeek(),
-            'monthly' => $from->copy()->addMonth(),
-            'yearly' => $from->copy()->addYear(),
-            default => $from->copy()->addDay(),
-        };
-    }
-
-    private static function calcNextRun(TaskRecurring $config): Carbon
-    {
-        return match ($config->frequency) {
-            'daily' => now()->addDay(),
-            'weekly' => now()->addWeek(),
-            'monthly' => now()->addMonth(),
-            'yearly' => now()->addYear(),
-            default => now()->addDay(),
-        };
-    }
-
-    private static function calcDueDate(TaskRecurring $config): ?string
-    {
-        $task = $config->task;
-        if (!$task->due_date) {
-            return null;
-        }
-
-        return match ($config->frequency) {
-            'daily' => today()->toDateString(),
-            'weekly' => today()->addWeek()->toDateString(),
-            'monthly' => today()->addMonth()->toDateString(),
-            'yearly' => today()->addYear()->toDateString(),
-            default => null,
+            'weekly' => $from->addWeeks($interval),
+            'monthly' => $from->addMonths($interval),
+            'yearly' => $from->addYears($interval),
+            default => $from->addDays($interval),
         };
     }
 }

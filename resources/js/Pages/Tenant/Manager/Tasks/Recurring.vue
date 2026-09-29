@@ -21,65 +21,70 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="task in tasks.data" :key="task.id" class="hover:bg-gray-50">
+            <tr v-for="schedule in schedules.data" :key="schedule.id" class="hover:bg-gray-50">
               <td class="td">
                 <Link
-                  :href="route('tenant.manager.tasks.show', task.id)"
+                  :href="route('tenant.manager.tasks.show', schedule.task_id)"
                   class="font-medium text-gray-900 hover:text-indigo-600"
                 >
-                  {{ task.title }}
+                  {{ schedule.task?.title }}
                 </Link>
               </td>
-              <td class="td text-gray-600">{{ task.project?.name }}</td>
+              <td class="td text-gray-600">{{ schedule.task?.project?.name }}</td>
               <td class="td text-center">
                 <span class="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
-                  {{ frequencyLabel(task.frequency) }}
+                  {{ frequencyLabel(schedule) }}
                 </span>
               </td>
-              <td class="td text-gray-700">{{ formatDate(task.next_run_at) }}</td>
-              <td class="td text-gray-500">{{ formatDate(task.recur_end_date) ?? 'Bez limitu' }}</td>
+              <td class="td text-gray-700">{{ formatDate(schedule.next_occurrence) }}</td>
+              <td class="td text-gray-500">{{ formatDate(schedule.ends_at) ?? $t('tasks.no_limit') }}</td>
               <td class="td text-right">
-                <button @click="stopRecurring(task)" class="text-xs text-orange-500 hover:text-orange-700">
+                <button @click="stopRecurring(schedule)" class="text-xs text-orange-500 hover:text-orange-700">
                   {{ $t('tasks.stop') }}
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
-        <div v-if="!tasks.data?.length" class="py-16 text-center">
+        <div v-if="!schedules.data?.length" class="py-16 text-center">
           <i class="fa-solid fa-rotate text-4xl text-gray-300 mb-3"></i>
           <p class="text-gray-500">{{ $t('tasks.no_recurring_tasks') }}</p>
         </div>
       </div>
 
-      <Pagination :links="tasks.links" />
+      <Pagination :links="schedules.links" />
     </div>
   </ManagerLayout>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
 
-const props = defineProps({ tasks: Object })
+const { t, locale } = useI18n()
 
-const stopRecurring = (task) => {
+defineProps({
+  schedules: Object,
+  frequencies: Array,
+})
+
+const stopRecurring = (schedule) => {
   if (confirm(t('tasks.stop_repeating_this_task'))) {
-    router.delete(route('tenant.manager.tasks.recurring.destroy', task.id))
+    router.delete(route('tenant.manager.tasks.recurring.destroy', schedule.task_id))
   }
 }
 
-const frequencyLabel = (f) =>
-  ({
-    daily: 'Codziennie',
-    weekly: t('common.weekly'),
-    biweekly: 'Co 2 tygodnie',
-    monthly: t('common.monthly'),
-    yearly: 'Co rok',
-  })[f] ?? f
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : null)
+/**
+ * "Every second week" is weekly with an interval of two, so the multiplier is
+ * shown next to the label rather than given a frequency of its own.
+ */
+const frequencyLabel = (schedule) => {
+  const label = t(`tasks.${schedule.frequency}`)
+
+  return schedule.interval > 1 ? `${label} ×${schedule.interval}` : label
+}
+
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString(locale.value) : null)
 </script>
