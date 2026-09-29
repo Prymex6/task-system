@@ -64,7 +64,7 @@
                   "
                   class="px-2 py-0.5 rounded-full text-xs font-medium transition"
                 >
-                  {{ article.is_published ? 'Tak' : 'Nie' }}
+                  {{ article.is_published ? $t('common.yes') : $t('common.no') }}
                 </button>
               </td>
               <td class="px-4 py-3 text-gray-400 text-xs">{{ formatDate(article.created_at) }}</td>
@@ -184,6 +184,7 @@
 import { ref } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   articles: { type: Object, required: true },
@@ -243,5 +244,5 @@ const destroy = (art) => {
   router.delete(route('tenant.manager.kb.destroy', art.id))
 }
 
-const formatDate = (d) => new Date(d).toLocaleDateString('pl-PL')
+const formatDate = (d) => new Date(d).toLocaleDateString(intlLocale())
 </script>

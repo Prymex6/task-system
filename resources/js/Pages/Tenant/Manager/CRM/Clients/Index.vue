@@ -68,7 +68,7 @@
                   :class="client.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'"
                   class="text-xs px-2 py-0.5 rounded-full"
                 >
-                  {{ client.is_active ? 'Aktywny' : 'Nieaktywny' }}
+                  {{ client.is_active ? $t('common.active') : $t('common.inactive') }}
                 </span>
               </td>
             </tr>

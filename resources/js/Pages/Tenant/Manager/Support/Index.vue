@@ -122,6 +122,7 @@ const { t } = useI18n()
 import { ref, reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 defineProps({
   tickets: { type: Array, default: () => [] },
@@ -167,6 +168,6 @@ function statusLabel(s) {
   return { open: 'Otwarte', in_progress: 'W toku', resolved: t('common.resolved'), closed: t('common.closed') }[s] || s
 }
 function formatDate(d) {
-  return new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })
+  return new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short' })
 }
 </script>

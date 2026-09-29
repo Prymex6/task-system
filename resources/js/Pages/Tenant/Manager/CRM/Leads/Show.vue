@@ -124,6 +124,7 @@ const { t } = useI18n()
 import { reactive } from 'vue'
 import { Link, useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ lead: Object })
 
@@ -154,6 +155,6 @@ const activityIcon = (type) =>
     note: 'fa-solid fa-sticky-note',
   })[type] ?? 'fa-solid fa-circle'
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

@@ -191,7 +191,7 @@
             :disabled="form.processing"
             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
           >
-            {{ form.processing ? 'Tworzenie...' : $t('common.create_workspace') }}
+            {{ form.processing ? $t('common.creating') : $t('common.create_workspace') }}
           </button>
         </div>
       </form>

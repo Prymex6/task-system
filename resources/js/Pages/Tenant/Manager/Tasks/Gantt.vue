@@ -123,6 +123,7 @@ const { t } = useI18n()
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tasks: { type: Array, default: () => [] },
@@ -165,7 +166,7 @@ const dateColumns = computed(() => {
     cols.push({
       date: new Date(cur),
       label: cur.toLocaleDateString(
-        'pl-PL',
+        intlLocale(),
         zoomLevel.value === 2 ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric' },
       ),
     })

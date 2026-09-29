@@ -102,6 +102,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const { t } = useI18n()
 
@@ -140,6 +141,6 @@ const leadStatusClass = (s) =>
     lost: 'badge-red',
   })[s] ?? 'badge-gray'
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

@@ -78,6 +78,7 @@ import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   proposals: Object,
@@ -87,6 +88,6 @@ const props = defineProps({
 const filters = reactive({ search: props.filters.search ?? '', status: props.filters.status ?? '' })
 const search = () =>
   router.get(route('tenant.manager.proposals.index'), filters, { preserveState: true, replace: true })
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v)
-const formatDate = (d) => new Date(d).toLocaleDateString('pl-PL')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v)
+const formatDate = (d) => new Date(d).toLocaleDateString(intlLocale())
 </script>

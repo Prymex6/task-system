@@ -128,6 +128,7 @@
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ task: Object })
 
@@ -149,7 +150,7 @@ const addComment = () => {
   )
 }
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : null)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : null)
 const priorityClass = (p) =>
   ({
     urgent: 'bg-red-100 text-red-700',

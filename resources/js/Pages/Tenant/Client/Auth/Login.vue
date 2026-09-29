@@ -69,7 +69,7 @@
 
           <button type="submit" :disabled="form.processing" class="btn-primary w-full py-3">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ form.processing ? 'Logowanie...' : $t('portal.sign_in') }}
+            {{ form.processing ? $t('common.signing_in') : $t('portal.sign_in') }}
           </button>
         </form>
       </div>

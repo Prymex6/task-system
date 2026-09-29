@@ -67,7 +67,7 @@
 
           <button type="submit" :disabled="form.processing" class="btn-primary w-full py-3">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ form.processing ? 'Tworzenie konta...' : $t('common.create_account_and_join') }}
+            {{ form.processing ? $t('common.creating_account') : $t('common.create_account_and_join') }}
           </button>
         </form>
       </div>
@@ -83,6 +83,7 @@ const { t } = useI18n()
 
 import { Head, useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   invitation: Object,
@@ -108,7 +109,7 @@ const roleLabel = computed(() => {
 
 const expiresAt = computed(() => {
   if (!props.invitation?.expires_at) return ''
-  return new Date(props.invitation.expires_at).toLocaleDateString('pl-PL')
+  return new Date(props.invitation.expires_at).toLocaleDateString(intlLocale())
 })
 
 const submit = () => {

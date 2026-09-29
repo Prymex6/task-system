@@ -59,6 +59,7 @@ const { t } = useI18n()
 import { computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   month: { type: String, required: true },
@@ -69,7 +70,7 @@ const weekdays = ['Pn', 'Wt', t('common.wed'), 'Cz', 'Pt', 'So', 'Nd']
 
 const first = computed(() => new Date(props.month + 'T00:00:00'))
 
-const monthLabel = computed(() => first.value.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' }))
+const monthLabel = computed(() => first.value.toLocaleDateString(intlLocale(), { month: 'long', year: 'numeric' }))
 
 /**
  * The grid starts on a Monday, so the days before the first of the month are

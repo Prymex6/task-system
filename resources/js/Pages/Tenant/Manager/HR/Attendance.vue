@@ -80,6 +80,7 @@ import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   attendance: Object,
@@ -89,7 +90,7 @@ const props = defineProps({
   canViewAll: Boolean,
 })
 
-const today = new Date().toLocaleDateString('pl-PL', {
+const today = new Date().toLocaleDateString(intlLocale(), {
   weekday: 'long',
   year: 'numeric',
   month: 'long',
@@ -123,8 +124,9 @@ const elapsedDisplay = computed(() => {
 const clockIn = () => useForm({}).post(route('tenant.manager.hr.clock-in'))
 const clockOut = () => useForm({}).post(route('tenant.manager.hr.clock-out'))
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
-const formatTime = (dt) => (dt ? new Date(dt).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
+const formatTime = (dt) =>
+  dt ? new Date(dt).toLocaleTimeString(intlLocale(), { hour: '2-digit', minute: '2-digit' }) : '—'
 const formatHours = (h) => {
   const hrs = Math.floor(h)
   const m = Math.round((h - hrs) * 60)

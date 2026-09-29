@@ -97,7 +97,7 @@
                   class="text-xs px-2 py-0.5 rounded-full font-medium"
                   :class="e.type === 'income' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
                 >
-                  {{ e.type === 'income' ? $t('common.revenue') : 'Wydatek' }}
+                  {{ e.type === 'income' ? $t('common.revenue') : $t('projects.expense') }}
                 </span>
               </td>
               <td class="td text-gray-700">{{ e.description ?? '—' }}</td>
@@ -120,6 +120,7 @@
 import { reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   project: Object,
@@ -137,6 +138,6 @@ const addEntry = () =>
   })
 
 const formatMoney = (v) =>
-  v != null ? new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v) : '—'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+  v != null ? new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v) : '—'
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

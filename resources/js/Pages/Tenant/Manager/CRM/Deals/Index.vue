@@ -95,6 +95,7 @@ import { reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   deals: Object,
@@ -108,6 +109,6 @@ const search = () => {
   router.get(route('tenant.manager.deals.index'), filters, { preserveState: true, replace: true })
 }
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => new Date(d).toLocaleDateString('pl-PL')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => new Date(d).toLocaleDateString(intlLocale())
 </script>

@@ -61,12 +61,13 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   report: { type: Array, default: () => [] },
   filters: Object,
 })
 
-const fmt = (n) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(n ?? 0)
+const fmt = (n) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(n ?? 0)
 const exportCsv = () => window.open(route('tenant.manager.reports.clients.export'), '_blank')
 </script>

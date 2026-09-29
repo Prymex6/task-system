@@ -168,6 +168,7 @@ import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   stats: {
@@ -186,11 +187,12 @@ const props = defineProps({
 
 const maxActivity = computed(() => Math.max(...props.activityChart.map((d) => d.tasks_done), 1))
 
-const formatMoney = (val) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(val ?? 0)
+const formatMoney = (val) =>
+  new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(val ?? 0)
 
 const formatDate = (date) => {
   if (!date) return ''
-  return new Date(date).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })
+  return new Date(date).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short' })
 }
 
 const isOverdue = (date) => date && new Date(date) < new Date()

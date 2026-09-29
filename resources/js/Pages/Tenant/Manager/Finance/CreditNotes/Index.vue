@@ -102,6 +102,7 @@
 import { ref, reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   creditNotes: Object,
@@ -119,6 +120,6 @@ const create = () => {
   })
 }
 
-const fmt = (n) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(n ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const fmt = (n) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(n ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

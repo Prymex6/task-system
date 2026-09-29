@@ -65,7 +65,7 @@
                     lead.contacted_at ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500 hover:bg-green-50'
                   "
                 >
-                  {{ lead.contacted_at ? 'Tak' : 'Nie' }}
+                  {{ lead.contacted_at ? $t('common.yes') : $t('common.no') }}
                 </button>
               </td>
               <td class="td text-gray-400 text-xs">{{ lead.source ?? '—' }}</td>

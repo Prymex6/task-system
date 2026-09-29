@@ -94,9 +94,10 @@
 import { Link } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ contract: Object })
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

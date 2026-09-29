@@ -55,6 +55,7 @@ const { t } = useI18n()
 import { useForm } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ contracts: Object })
 
@@ -63,8 +64,8 @@ const sign = (id) => {
   useForm({}).post(route('tenant.portal.contracts.sign', id))
 }
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const contractStatusLabel = (s) =>
   ({ draft: 'Szkic', active: 'Aktywna', signed: 'Podpisana', expired: t('common.expired'), cancelled: 'Anulowana' })[
     s

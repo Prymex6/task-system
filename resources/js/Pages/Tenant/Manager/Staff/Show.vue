@@ -49,7 +49,7 @@
                   class="fa-solid fa-circle w-4 text-center"
                   :class="staff.is_active ? 'text-emerald-500' : 'text-gray-300'"
                 ></i>
-                <span class="text-gray-600">{{ staff.is_active ? 'Aktywny' : 'Nieaktywny' }}</span>
+                <span class="text-gray-600">{{ staff.is_active ? $t('common.active') : $t('common.inactive') }}</span>
               </div>
               <div v-if="staff.last_seen_at" class="flex gap-2">
                 <i class="fa-solid fa-clock w-4 text-gray-400"></i>
@@ -152,6 +152,7 @@ const { t } = useI18n()
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   staff: Object,
@@ -179,7 +180,7 @@ const roleColor = (r) =>
   ({ owner: 'badge-purple', admin: 'badge-red', manager: 'badge-orange', member: 'badge-blue', guest: 'badge-gray' })[
     r
   ] ?? 'badge-gray'
-const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleString(intlLocale()) : '—')
 const formatHours = (h) => {
   const hrs = Math.floor(h ?? 0)
   const m = Math.round(((h ?? 0) - hrs) * 60)

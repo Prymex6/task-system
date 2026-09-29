@@ -68,6 +68,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   timesheets: { type: Object, default: () => ({ data: [] }) },
@@ -86,7 +87,7 @@ const badges = {
 
 const label = (s) => labels[s] ?? s
 const badge = (s) => badges[s] ?? 'bg-gray-100 text-gray-600'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 
 const filter = () =>
   router.get(

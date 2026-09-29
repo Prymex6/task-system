@@ -115,6 +115,7 @@ const { t } = useI18n()
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tasks: Array,
@@ -191,7 +192,7 @@ const calendarDays = computed(() => {
       allTasks,
       tasks: allTasks.slice(0, maxVisible),
       more: Math.max(0, allTasks.length - maxVisible),
-      fullDate: date.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' }),
+      fullDate: date.toLocaleDateString(intlLocale(), { weekday: 'long', day: 'numeric', month: 'long' }),
     })
   }
 

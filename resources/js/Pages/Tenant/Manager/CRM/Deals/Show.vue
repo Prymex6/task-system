@@ -135,6 +135,7 @@
 import { reactive } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   deal: Object,
@@ -162,6 +163,6 @@ const activityIcon = (t) =>
     meeting: 'fa-solid fa-calendar',
     note: 'fa-solid fa-note-sticky',
   })[t] ?? 'fa-solid fa-circle'
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

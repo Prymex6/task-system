@@ -76,6 +76,7 @@ import { reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tasks: Object,
@@ -88,5 +89,5 @@ const filters = reactive({ project_id: props.filters?.project_id ?? '', status: 
 const apply = () => router.get(route('tenant.client.tasks.index'), filters, { preserveState: true, replace: true })
 
 const isOverdue = (t) => t.due_date && !t.completed_at && new Date(t.due_date) < new Date()
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' }) : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short' }) : '—')
 </script>

@@ -68,6 +68,7 @@
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   project: Object,
@@ -89,5 +90,5 @@ const addComment = () => {
 }
 
 const formatDate = (d) =>
-  d ? new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
+  d ? new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
 </script>

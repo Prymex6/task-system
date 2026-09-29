@@ -109,6 +109,7 @@ import { reactive, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   logs: Object,
@@ -127,5 +128,5 @@ const selected = ref(null)
 const apply = () =>
   router.get(route('tenant.manager.settings.audit-log'), filters, { preserveState: true, replace: true })
 
-const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleString(intlLocale()) : '—')
 </script>

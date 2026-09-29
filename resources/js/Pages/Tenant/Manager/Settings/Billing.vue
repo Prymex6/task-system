@@ -11,10 +11,10 @@
         <div class="flex items-center justify-between mb-4">
           <div>
             <h2 class="font-semibold text-gray-900">{{ $t('settings.current_plan') }}</h2>
-            <p class="text-sm text-gray-500 mt-0.5">{{ tenant?.plan?.name ?? 'Darmowy' }}</p>
+            <p class="text-sm text-gray-500 mt-0.5">{{ tenant?.plan?.name ?? $t('common.free') }}</p>
           </div>
           <span class="text-2xl font-bold text-indigo-600">
-            {{ tenant?.plan?.price ? fmt(tenant.plan.price) + '/mies.' : 'Gratis' }}
+            {{ tenant?.plan?.price ? fmt(tenant.plan.price) + $t('finance.per_month') : $t('platform.free_of_charge') }}
           </span>
         </div>
 
@@ -31,7 +31,7 @@
             {{ formatDate(tenant?.trial_ends_at ?? tenant?.subscription_ends_at) }}</span
           >
           <span :class="tenant?.is_active ? 'text-green-600' : 'text-red-600'" class="font-medium">
-            {{ tenant?.is_active ? 'Aktywny' : 'Nieaktywny' }}
+            {{ tenant?.is_active ? $t('common.active') : $t('common.inactive') }}
           </span>
         </div>
       </div>
@@ -52,7 +52,7 @@
                 <p class="text-xs text-gray-500 mt-0.5">{{ plan.description }}</p>
               </div>
               <span class="font-bold text-gray-900">
-                {{ plan.price > 0 ? fmt(plan.price) : 'Gratis' }}
+                {{ plan.price > 0 ? fmt(plan.price) : $t('platform.free_of_charge') }}
               </span>
             </div>
             <div class="space-y-1.5 mb-4">
@@ -106,6 +106,7 @@
 import { computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tenant: Object,
@@ -121,6 +122,6 @@ const changePlan = (plan) => {
   }
 }
 
-const fmt = (n) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(n ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const fmt = (n) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(n ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

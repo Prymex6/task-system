@@ -62,11 +62,12 @@ const { t } = useI18n()
 import { Link } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ invoices: Object })
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const isOverdue = (inv) => inv.balance_due > 0 && inv.due_date && new Date(inv.due_date) < new Date()
 const invStatusLabel = (s) =>
   ({ draft: 'Szkic', sent: t('common.sent'), paid: t('finance.paid'), overdue: 'Przeterminowana' })[s] ?? s

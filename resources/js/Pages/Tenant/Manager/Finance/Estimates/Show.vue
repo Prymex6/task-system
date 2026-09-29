@@ -117,6 +117,7 @@ const { t } = useI18n()
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ estimate: Object })
 
@@ -125,6 +126,6 @@ const convertToInvoice = () => {
   useForm({}).post(route('tenant.manager.estimates.convert', props.estimate.id))
 }
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

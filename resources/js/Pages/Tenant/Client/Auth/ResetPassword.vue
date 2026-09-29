@@ -62,7 +62,7 @@
 
           <button type="submit" :disabled="form.processing || !tokenValid" class="btn-primary w-full py-3">
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin"></i>
-            {{ form.processing ? 'Zapisywanie...' : $t('portal.set_a_new_password') }}
+            {{ form.processing ? $t('common.saving') : $t('portal.set_a_new_password') }}
           </button>
         </form>
       </div>

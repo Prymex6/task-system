@@ -163,6 +163,7 @@
 import { computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   estimate: { type: Object, default: null },
@@ -220,5 +221,5 @@ const submit = () => {
   }
 }
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
 </script>

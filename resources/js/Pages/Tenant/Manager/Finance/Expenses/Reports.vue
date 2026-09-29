@@ -80,6 +80,7 @@
 import { reactive, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   expenses: { type: Array, default: () => [] },
@@ -102,7 +103,7 @@ const apply = () => router.get(route('tenant.manager.expenses.reports'), filters
 const exportCsv = () =>
   window.open(route('tenant.manager.expenses.export') + '?' + new URLSearchParams(filters), '_blank')
 
-const fmt = (n) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(n ?? 0)
+const fmt = (n) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(n ?? 0)
 const maxTotal = computed(() => Math.max(...props.byCategory.map((r) => r.total ?? 0), 1))
 const pct = (val) => Math.round(((val ?? 0) / maxTotal.value) * 100)
 </script>

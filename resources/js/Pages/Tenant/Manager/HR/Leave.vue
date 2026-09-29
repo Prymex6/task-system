@@ -138,6 +138,7 @@ import { ref, reactive } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   leaves: Object,
@@ -169,5 +170,5 @@ const leaveStatusLabel = (s) =>
   ({ pending: t('common.pending_3'), approved: 'Zatwierdzony', rejected: 'Odrzucony' })[s] ?? s
 const leaveStatusClass = (s) =>
   ({ pending: 'badge-yellow', approved: 'badge-green', rejected: 'badge-red' })[s] ?? 'badge-gray'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

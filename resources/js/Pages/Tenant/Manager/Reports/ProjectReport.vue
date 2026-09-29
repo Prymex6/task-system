@@ -99,13 +99,14 @@
 import { Link } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   projects: { type: Array, default: () => [] },
   summary: { type: Object, default: () => ({ total: 0, in_progress: 0, completed: 0, overdue: 0 }) },
 })
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const formatHours = (h) => {
   const hrs = Math.floor(h ?? 0)
   const m = Math.round(((h ?? 0) - hrs) * 60)

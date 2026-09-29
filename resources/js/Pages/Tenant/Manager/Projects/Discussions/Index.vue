@@ -88,6 +88,7 @@ const { t } = useI18n()
 import { ref, reactive } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   project: Object,
@@ -107,5 +108,5 @@ const del = (d) => {
   if (confirm(t('projects.delete_this_discussion')))
     router.delete(route('tenant.manager.projects.discussions.destroy', [props.project.id, d.id]))
 }
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

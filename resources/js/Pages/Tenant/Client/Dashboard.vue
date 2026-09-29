@@ -122,6 +122,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   stats: { type: Object, default: () => ({ projects: 0, unpaid_invoices: 0, pending_estimates: 0, open_tickets: 0 }) },
@@ -129,6 +130,6 @@ const props = defineProps({
   recentInvoices: { type: Array, default: () => [] },
 })
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

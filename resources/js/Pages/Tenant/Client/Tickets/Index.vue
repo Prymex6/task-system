@@ -63,6 +63,7 @@ const { t } = useI18n()
 import { Link } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ tickets: Object })
 
@@ -75,5 +76,5 @@ const ticketStatusLabel = (s) =>
 const ticketStatusClass = (s) =>
   ({ open: 'badge-blue', in_progress: 'badge-indigo', resolved: 'badge-green', closed: 'badge-gray' })[s] ??
   'badge-gray'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

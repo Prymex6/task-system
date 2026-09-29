@@ -33,7 +33,7 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm text-gray-800" :class="{ 'font-semibold': !notif.read_at }">
-              {{ notif.data?.message ?? 'Powiadomienie' }}
+              {{ notif.data?.message ?? $t('common.notification') }}
             </p>
             <p class="text-xs text-gray-400 mt-0.5">{{ timeAgo(notif.created_at) }}</p>
           </div>

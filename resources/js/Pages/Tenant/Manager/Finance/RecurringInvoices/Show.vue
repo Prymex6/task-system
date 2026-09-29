@@ -4,7 +4,9 @@
       <div class="flex items-start justify-between">
         <div>
           <h1 class="text-2xl font-bold text-gray-900">{{ recurring.title }}</h1>
-          <p class="text-sm text-gray-500 mt-0.5">{{ recurring.client?.name ?? 'Bez klienta' }} · {{ cycle }}</p>
+          <p class="text-sm text-gray-500 mt-0.5">
+            {{ recurring.client?.name ?? $t('common.no_client') }} · {{ cycle }}
+          </p>
         </div>
         <div class="flex items-center gap-2">
           <button class="btn-primary" @click="generate">{{ $t('finance.issue_now') }}</button>
@@ -28,7 +30,7 @@
         <div class="bg-white rounded-xl border border-gray-200 p-4">
           <p class="text-xs text-gray-500">{{ $t('common.status') }}</p>
           <p class="text-lg font-semibold mt-1" :class="recurring.is_active ? 'text-green-600' : 'text-gray-500'">
-            {{ recurring.is_active ? 'Aktywne' : 'Wstrzymane' }}
+            {{ recurring.is_active ? $t('platform.active') : $t('common.paused') }}
           </p>
         </div>
       </div>
@@ -77,6 +79,7 @@ const { t } = useI18n()
 import { computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ recurring: { type: Object, required: true } })
 
@@ -97,9 +100,9 @@ const lineTotal = (item) =>
 
 const total = computed(() => items.value.reduce((sum, i) => sum + lineTotal(i), 0))
 
-const fmt = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: currency.value }).format(v || 0)
+const fmt = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: currency.value }).format(v || 0)
 
-const date = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const date = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 
 const generate = () => {
   if (confirm(t('finance.issue_an_invoice_from_this_schedule'))) {

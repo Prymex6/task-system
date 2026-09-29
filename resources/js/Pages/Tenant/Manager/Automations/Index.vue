@@ -56,7 +56,7 @@
                 <div class="flex items-center gap-2 mb-1">
                   <span class="font-semibold text-gray-900">{{ rule.name }}</span>
                   <span class="badge text-xs" :class="rule.is_active ? 'badge-green' : 'badge-gray'">
-                    {{ rule.is_active ? 'Aktywna' : $t('common.off') }}
+                    {{ rule.is_active ? $t('common.active_2') : $t('common.off') }}
                   </span>
                 </div>
                 <div class="text-sm text-gray-500 mb-3">{{ rule.description }}</div>
@@ -233,6 +233,7 @@ const { t } = useI18n()
 import { ref, reactive } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   rules: { type: Array, default: () => [] },
@@ -387,5 +388,5 @@ const triggerIcon = (event) => {
   return { icon: 'fa-solid fa-bolt text-gray-600', bg: 'bg-gray-100' }
 }
 
-const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleString(intlLocale()) : '—')
 </script>

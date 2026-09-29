@@ -130,6 +130,7 @@ import { ref, reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   activities: Object,
@@ -175,5 +176,5 @@ const typeLabel = (t) =>
     t
   ] ?? t
 const formatDate = (d) =>
-  d ? new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
+  d ? new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
 </script>

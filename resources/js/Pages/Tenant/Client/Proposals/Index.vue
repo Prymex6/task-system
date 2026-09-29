@@ -67,6 +67,7 @@ const { t } = useI18n()
 import { Link } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ proposals: Object })
 
@@ -91,7 +92,7 @@ const statusLabel = (s) =>
   })[s] ?? s
 
 const isExpired = (p) => p.valid_until && new Date(p.valid_until) < new Date() && p.status !== 'accepted'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const formatMoney = (v) =>
-  v != null ? new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v) : '—'
+  v != null ? new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v) : '—'
 </script>

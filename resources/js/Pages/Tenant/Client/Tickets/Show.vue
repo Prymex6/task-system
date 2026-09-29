@@ -116,6 +116,7 @@ const { t } = useI18n()
 
 import { Link, useForm } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ ticket: Object })
 
@@ -136,5 +137,5 @@ const ticketStatusClass = (s) =>
   ({ open: 'text-blue-600', in_progress: 'text-indigo-600', resolved: 'text-emerald-600', closed: 'text-gray-500' })[
     s
   ] ?? ''
-const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleString(intlLocale()) : '—')
 </script>

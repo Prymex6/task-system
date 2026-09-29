@@ -53,6 +53,7 @@ const { t } = useI18n()
 import { Link } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ projects: Object })
 
@@ -60,5 +61,5 @@ const statusLabel = (s) =>
   ({ planning: 'Planowanie', in_progress: 'W trakcie', on_hold: 'Wstrzymany', completed: t('common.completed_3') })[
     s
   ] ?? s
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

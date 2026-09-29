@@ -75,7 +75,7 @@
                     :class="staff.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                   >
-                    {{ staff.is_active ? 'Aktywny' : 'Nieaktywny' }}
+                    {{ staff.is_active ? $t('common.active') : $t('common.inactive') }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
@@ -225,7 +225,7 @@
               :disabled="form.processing"
               class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
             >
-              {{ form.processing ? 'Zapisywanie...' : $t('common.save') }}
+              {{ form.processing ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
         </form>

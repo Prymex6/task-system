@@ -16,7 +16,7 @@
             class="text-xs px-2 py-0.5 rounded-full font-medium"
             :class="tenant.is_suspended ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
           >
-            {{ tenant.is_suspended ? 'Zawieszone' : 'Aktywne' }}
+            {{ tenant.is_suspended ? $t('common.suspended') : $t('platform.active') }}
           </span>
           <button
             v-if="!tenant.is_suspended"
@@ -95,6 +95,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tenant: Object,
@@ -117,5 +118,5 @@ const deleteTenant = () => {
     router.delete(route('landlord.tenants.destroy', props.tenant.id))
   }
 }
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

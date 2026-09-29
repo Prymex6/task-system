@@ -116,6 +116,7 @@
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   monthlyData: { type: Array, default: () => [] },
@@ -129,5 +130,5 @@ const changeYear = () => router.get(route('tenant.manager.reports.finance'), { y
 
 const maxRevenue = computed(() => Math.max(...props.monthlyData.map((m) => Math.max(m.revenue, m.expenses)), 1))
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
 </script>

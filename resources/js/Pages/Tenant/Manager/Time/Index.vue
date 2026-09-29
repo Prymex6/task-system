@@ -18,7 +18,7 @@
             <div class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></div>
             <div>
               <div class="font-semibold text-indigo-900">{{ $t('time.timer_running') }}</div>
-              <div class="text-sm text-indigo-700">{{ activeTimer.task?.title ?? 'Bez zadania' }}</div>
+              <div class="text-sm text-indigo-700">{{ activeTimer.task?.title ?? $t('common.no_task') }}</div>
             </div>
             <div class="text-2xl font-mono font-bold text-indigo-800">{{ timerDisplay }}</div>
           </div>
@@ -156,6 +156,7 @@ import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { Link, useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   entries: Object,
@@ -231,5 +232,5 @@ const formatHours = (h) => {
   return mins > 0 ? `${hrs}h ${mins}m` : `${hrs}h`
 }
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

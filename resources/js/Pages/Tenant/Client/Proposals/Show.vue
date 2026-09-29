@@ -149,6 +149,7 @@ const { t } = useI18n()
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ proposal: Object })
 
@@ -205,7 +206,7 @@ const statusLabel = (s) =>
     expired: t('common.expired'),
   })[s] ?? s
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : null)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : null)
 const formatMoney = (v) =>
-  v != null ? new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v) : '—'
+  v != null ? new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v) : '—'
 </script>

@@ -139,6 +139,7 @@ import { ref, reactive, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   balances: Object,
@@ -170,5 +171,5 @@ const reject = (req) => {
   const reason = prompt(t('hr.reason_for_rejecting_optional'))
   if (reason !== null) router.post(route('tenant.manager.hr.leave-balances.reject', req.id), { reason })
 }
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

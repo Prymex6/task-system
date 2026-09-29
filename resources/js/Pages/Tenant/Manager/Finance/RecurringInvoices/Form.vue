@@ -3,7 +3,7 @@
     <form class="max-w-3xl space-y-5" @submit.prevent="submit">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">
-          {{ isEdit ? 'Edycja zlecenia' : $t('common.new_recurring_invoice') }}
+          {{ isEdit ? $t('finance.edit_schedule') : $t('common.new_recurring_invoice') }}
         </h1>
         <p class="text-sm text-gray-500 mt-0.5">
           {{ $t('finance.the_lines_are_saved_as_a') }}
@@ -116,6 +116,7 @@ import { computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import FormField from '@/Components/Manager/FormField.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   recurring: { type: Object, default: null },
@@ -153,7 +154,7 @@ const total = computed(() =>
 )
 
 const fmt = (v) =>
-  new Intl.NumberFormat('pl-PL', { style: 'currency', currency: form.template_data.currency }).format(v || 0)
+  new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: form.template_data.currency }).format(v || 0)
 
 const submit = () => {
   if (isEdit.value) {

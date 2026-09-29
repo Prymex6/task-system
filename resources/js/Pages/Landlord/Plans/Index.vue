@@ -36,10 +36,10 @@
               <tr v-for="plan in plans" :key="plan.id">
                 <td class="px-6 py-4 font-medium text-gray-900">{{ plan.name }}</td>
                 <td class="px-6 py-4 text-gray-700">
-                  {{ plan.price ? plan.price + ' PLN/rok' : '—' }}
+                  {{ plan.price ? formatMoney(plan.price) + $t('finance.per_year') : '—' }}
                 </td>
                 <td class="px-6 py-4 text-gray-700">
-                  {{ plan.max_orders_per_month ?? 'Nielimitowane' }}
+                  {{ plan.max_orders_per_month ?? $t('common.unlimited') }}
                 </td>
                 <td class="px-6 py-4 text-gray-700">{{ plan.tenants_count }}</td>
                 <td class="px-6 py-4">
@@ -47,7 +47,7 @@
                     :class="plan.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'"
                     class="px-2 py-1 rounded-full text-xs font-semibold"
                   >
-                    {{ plan.is_active ? 'Aktywny' : 'Nieaktywny' }}
+                    {{ plan.is_active ? $t('common.active') : $t('common.inactive') }}
                   </span>
                 </td>
                 <td class="px-6 py-4 text-right space-x-3">
@@ -80,6 +80,7 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { formatMoney } from '@/format'
 
 defineProps({
   plans: { type: Array, default: () => [] },

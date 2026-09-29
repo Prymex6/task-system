@@ -113,6 +113,7 @@ import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import axios from 'axios'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   columns: Array,
@@ -163,7 +164,7 @@ const isOverdue = (task) => {
   return new Date(task.due_date) < new Date()
 }
 
-const formatDate = (d) => new Date(d).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })
+const formatDate = (d) => new Date(d).toLocaleDateString(intlLocale(), { month: 'short', day: 'numeric' })
 
 const priorityBar = (p) =>
   ({

@@ -178,6 +178,7 @@ import { ref } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   client: Object,
@@ -205,5 +206,6 @@ const removeContact = (contactId) => {
   useForm({}).delete(route('tenant.manager.clients.contacts.remove', [props.client.id, contactId]))
 }
 
-const formatMoney = (val) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(val ?? 0)
+const formatMoney = (val) =>
+  new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(val ?? 0)
 </script>

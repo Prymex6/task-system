@@ -199,6 +199,7 @@ import { ref, reactive } from 'vue'
 import { Link, useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   expenses: Object,
@@ -251,6 +252,6 @@ const deleteExpense = (id) => {
 const statusLabel = (s) => ({ pending: t('common.pending_3'), approved: 'Zatwierdzony', rejected: 'Odrzucony' })[s] ?? s
 const statusClass = (s) =>
   ({ pending: 'badge-yellow', approved: 'badge-green', rejected: 'badge-red' })[s] ?? 'badge-gray'
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

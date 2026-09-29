@@ -2,7 +2,7 @@
   <ManagerLayout :title="isEdit ? 'Edycja szansy' : $t('common.new_deal')">
     <form class="max-w-3xl space-y-5" @submit.prevent="submit">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? 'Edycja szansy' : $t('common.new_deal') }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">{{ isEdit ? $t('crm.edit_deal') : $t('common.new_deal') }}</h1>
         <p class="text-sm text-gray-500 mt-0.5">{{ $t('crm.a_specific_piece_of_business_with') }}</p>
       </div>
 

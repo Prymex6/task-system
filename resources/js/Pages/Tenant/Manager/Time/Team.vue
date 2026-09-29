@@ -96,6 +96,7 @@ import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import axios from 'axios'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   timesheets: { type: Array, default: () => [] },
@@ -109,9 +110,9 @@ const weekLabel = computed(() => {
   const end = new Date(start)
   end.setDate(end.getDate() + 6)
   return (
-    start.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' }) +
+    start.toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short' }) +
     ' – ' +
-    end.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', year: 'numeric' })
+    end.toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short', year: 'numeric' })
   )
 })
 

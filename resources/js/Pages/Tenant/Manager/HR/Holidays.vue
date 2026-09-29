@@ -99,6 +99,7 @@ const { t } = useI18n()
 import { ref, reactive, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   holidays: { type: Array, default: () => [] },
@@ -134,5 +135,5 @@ const save = () => {
 const del = (h) => {
   if (confirm(t('hr.delete_this_holiday'))) router.delete(route('tenant.manager.hr.holidays.destroy', h.id))
 }
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' }) : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'long' }) : '—')
 </script>

@@ -44,7 +44,7 @@
                   class="text-xs px-2 py-0.5 rounded-full font-medium transition-colors"
                   :class="wh.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'"
                 >
-                  {{ wh.is_active ? 'Aktywny' : $t('common.off_2') }}
+                  {{ wh.is_active ? $t('common.active') : $t('common.off_2') }}
                 </button>
               </td>
               <td class="td text-xs text-gray-400">{{ formatDate(wh.last_triggered_at) }}</td>
@@ -116,6 +116,7 @@ import { ref, reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import axios from 'axios'
+import { intlLocale } from '@/format'
 
 defineProps({
   webhooks: { type: Array, default: () => [] },
@@ -159,5 +160,5 @@ const del = (wh) => {
   if (confirm(t('settings.delete_this_webhook'))) router.delete(route('tenant.manager.webhooks.destroy', wh.id))
 }
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

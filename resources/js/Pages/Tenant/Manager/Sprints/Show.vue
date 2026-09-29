@@ -123,6 +123,7 @@ import { ref, computed } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   sprint: Object,
@@ -160,5 +161,5 @@ const completeSprint = () => useForm({}).post(route('tenant.manager.sprints.comp
 
 const priorityDot = (p) =>
   ({ critical: 'bg-red-500', high: 'bg-orange-400', medium: 'bg-amber-400', low: 'bg-gray-300' })[p] ?? 'bg-gray-300'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

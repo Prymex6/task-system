@@ -22,7 +22,7 @@
                   @click="copyPassword"
                   class="text-xs px-3 py-1 bg-yellow-700 hover:bg-yellow-800 text-white rounded transition"
                 >
-                  {{ copied ? 'Skopiowano!' : 'Kopiuj' }}
+                  {{ copied ? $t('common.copied') : $t('common.copy') }}
                 </button>
               </div>
             </div>
@@ -86,7 +86,7 @@
                     :class="tenant.version === 'test' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'"
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                   >
-                    {{ tenant.version === 'test' ? 'Testowa' : 'Stabilna' }}
+                    {{ tenant.version === 'test' ? $t('platform.trial_2') : $t('platform.stable') }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -94,7 +94,7 @@
                     :class="tenant.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                   >
-                    {{ tenant.status === 'active' ? 'Aktywny' : 'Nieaktywny' }}
+                    {{ tenant.status === 'active' ? $t('common.active') : $t('common.inactive') }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -108,7 +108,7 @@
                   <span v-else class="text-gray-400 text-xs">{{ $t('common.no_end_date') }}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ new Date(tenant.created_at).toLocaleDateString('pl-PL') }}
+                  {{ new Date(tenant.created_at).toLocaleDateString(intlLocale()) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Link
@@ -204,6 +204,7 @@
 import { ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { intlLocale } from '@/format'
 
 defineProps({
   tenants: Object,
@@ -231,7 +232,7 @@ const deleteTarget = ref(null)
 
 function formatDate(dt) {
   if (!dt) return ''
-  return new Date(dt).toLocaleDateString('pl-PL')
+  return new Date(dt).toLocaleDateString(intlLocale())
 }
 
 function isLicenseExpired(tenant) {

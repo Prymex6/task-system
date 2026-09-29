@@ -93,6 +93,7 @@ const { t } = useI18n()
 
 import { Link, router } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   inquiries: Object,
@@ -100,7 +101,7 @@ const props = defineProps({
 })
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleString('pl-PL', {
+  return new Date(date).toLocaleString(intlLocale(), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

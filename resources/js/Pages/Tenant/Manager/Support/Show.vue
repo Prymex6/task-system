@@ -77,6 +77,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   ticket: Object,
@@ -110,6 +111,11 @@ function statusLabel(s) {
   return { open: 'Otwarte', in_progress: 'W toku', resolved: t('common.resolved'), closed: t('common.closed') }[s] || s
 }
 function formatDate(d) {
-  return new Date(d).toLocaleString('pl-PL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+  return new Date(d).toLocaleString(intlLocale(), {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 </script>

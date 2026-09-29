@@ -77,7 +77,7 @@
             class="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin mr-2"></i>
-            {{ form.processing ? 'Zapisywanie...' : $t('portal.set_a_new_password') }}
+            {{ form.processing ? $t('common.saving') : $t('portal.set_a_new_password') }}
           </button>
         </form>
       </div>

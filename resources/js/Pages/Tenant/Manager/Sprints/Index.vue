@@ -135,6 +135,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { Link, useForm, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   sprints: { type: Array, default: () => [] },
@@ -181,5 +182,5 @@ const sprintStatusLabel = (s) =>
   ({ planning: 'Planowanie', active: 'Aktywny', completed: t('common.finished') })[s] ?? s
 const sprintStatusClass = (s) =>
   ({ planning: 'badge-blue', active: 'badge-green', completed: 'badge-gray' })[s] ?? 'badge-gray'
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

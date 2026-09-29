@@ -114,6 +114,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   stats: { type: Object, default: () => ({}) },
@@ -146,7 +147,7 @@ const load = () =>
     { preserveState: true },
   )
 
-const fmt = (n) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(n ?? 0)
+const fmt = (n) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(n ?? 0)
 const maxPaid = () => Math.max(...(props.stats.by_month ?? []).map((m) => m.paid ?? 0), 1)
 const barH = (val) => Math.max(4, Math.round(((val ?? 0) / maxPaid()) * 128))
 const pct = (a, b) => (b > 0 ? Math.min(100, Math.round((a / b) * 100)) : 0)

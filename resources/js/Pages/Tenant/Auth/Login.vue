@@ -78,7 +78,7 @@
             class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <i v-if="form.processing" class="fa-solid fa-spinner fa-spin mr-2"></i>
-            {{ form.processing ? 'Logowanie...' : $t('portal.sign_in') }}
+            {{ form.processing ? $t('common.signing_in') : $t('portal.sign_in') }}
           </button>
         </form>
       </div>

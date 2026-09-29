@@ -163,6 +163,7 @@
 import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   sprint: Object,
@@ -180,7 +181,7 @@ const burndownPoints = computed(() => {
   }))
 })
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 
 const statusClass = (s) =>
   ({

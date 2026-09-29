@@ -41,7 +41,7 @@
                   class="text-xs px-2 py-0.5 rounded-full font-medium"
                   :class="r.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'"
                 >
-                  {{ r.is_active ? 'Aktywne' : 'Wstrzymane' }}
+                  {{ r.is_active ? $t('platform.active') : $t('common.paused') }}
                 </span>
               </td>
               <td class="td text-right">
@@ -73,6 +73,7 @@ const { t } = useI18n()
 
 import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 defineProps({ recurring: { type: Object, default: () => ({ data: [] }) } })
 
@@ -80,7 +81,7 @@ const labels = { weekly: t('common.week'), monthly: t('common.month'), quarterly
 
 const cycle = (r) => (r.interval > 1 ? `co ${r.interval} × ${labels[r.frequency]}` : `co ${labels[r.frequency]}`)
 
-const date = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const date = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 
 const generate = (r) => {
   if (confirm(t('finance.issue_an_invoice_from_this_schedule'))) {

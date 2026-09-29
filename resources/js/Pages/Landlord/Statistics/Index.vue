@@ -121,6 +121,7 @@
 import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   stats: { type: Object, default: () => ({}) },
@@ -145,9 +146,9 @@ const planClass = (p) =>
     enterprise: 'bg-purple-100 text-purple-700',
   })[p?.toLowerCase()] ?? 'bg-gray-100 text-gray-600'
 
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const formatMoney = (v) =>
   v != null
-    ? new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(v)
+    ? new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(v)
     : '—'
 </script>

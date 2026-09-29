@@ -286,6 +286,84 @@ class TranslationCatalogueTest extends TestCase
     }
 
     /**
+     * Nothing a template prints may be written into it.
+     *
+     * This is the structural version of the check above, and it catches what a
+     * word list cannot. "Logowanie...", "Skopiowano!" and "Kopiuj" all carried
+     * no diacritic and matched no keyword, so they sat in the components
+     * untranslated; so did fifty more. Anything inside {{ }} is on screen by
+     * definition, so a literal there is copy unless it is one of the few
+     * symbols below.
+     */
+    public function test_no_template_prints_a_literal(): void
+    {
+        $offenders = [];
+
+        $directory = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->base() . '/resources/js')
+        );
+
+        foreach ($directory as $file) {
+            if (!$file->isFile() || $file->getExtension() !== 'vue') {
+                continue;
+            }
+
+            $source = file_get_contents($file->getPathname());
+            $start = strpos($source, '<template');
+            $end = strrpos($source, '</template>');
+
+            if ($start === false || $end === false) {
+                continue;
+            }
+
+            $template = substr($source, $start, $end - $start);
+
+            preg_match_all('/\{\{([^}]*)\}\}/u', $template, $interpolations);
+
+            foreach ($interpolations[1] as $expression) {
+                // The argument to a translation or a route is a key, not copy.
+                $expression = preg_replace(
+                    ["/\\\$?tc?\(\s*'[^']*'/u", "/route\(\s*'[^']*'/u", "/\[\s*'[^']*'\s*\]/u"],
+                    '',
+                    $expression
+                );
+
+                preg_match_all("/'([^']*)'/u", $expression, $literals);
+
+                foreach ($literals[1] as $text) {
+                    if ($this->isSymbol($text)) {
+                        continue;
+                    }
+
+                    $offenders[] = $file->getBasename() . ': ' . $text;
+                }
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "Templates printing a literal instead of a translation:\n  " . implode("\n  ", $offenders),
+        );
+    }
+
+    /**
+     * The handful of literals that are not copy, and read the same in either
+     * language: a count that has overflowed its badge, the initial on an
+     * avatar, the marker beside a required field, and an ISO currency code.
+     */
+    private function isSymbol(string $text): bool
+    {
+        $trimmed = trim($text);
+
+        if ($trimmed === '') {
+            return true;
+        }
+
+        return (bool) preg_match('/^([\p{P}\p{S}\s]+|[a-z0-9_-]+|\d+\+|\p{Lu}|[A-Z]{3})$/u', $trimmed);
+    }
+
+    /**
      * Diacritics alone are not enough.
      *
      * Plenty of Polish carries no diacritic at all, and 79 strings sat in the

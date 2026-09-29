@@ -102,6 +102,7 @@ const { t } = useI18n()
 
 import { Link, router } from '@inertiajs/vue3'
 import LandlordLayout from '@/Layouts/LandlordLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   tickets: Object,
@@ -148,6 +149,6 @@ function statusLabel(s) {
   return { open: 'Otwarte', in_progress: 'W toku', resolved: t('common.resolved'), closed: t('common.closed') }[s] || s
 }
 function formatDate(d) {
-  return new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short', year: 'numeric' })
+  return new Date(d).toLocaleDateString(intlLocale(), { day: 'numeric', month: 'short', year: 'numeric' })
 }
 </script>

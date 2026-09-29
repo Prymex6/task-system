@@ -119,6 +119,7 @@
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   conversations: { type: Array, default: () => [] },
@@ -162,6 +163,6 @@ const timeAgo = (date) => {
   if (mins < 60) return `${mins} min`
   const hrs = Math.floor(mins / 60)
   if (hrs < 24) return `${hrs}h`
-  return new Date(date).toLocaleDateString('pl-PL')
+  return new Date(date).toLocaleDateString(intlLocale())
 }
 </script>

@@ -58,6 +58,7 @@ const { t } = useI18n()
 import { Link, useForm } from '@inertiajs/vue3'
 import ClientLayout from '@/Layouts/ClientLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({ estimates: Object })
 
@@ -71,8 +72,8 @@ const reject = (id) => {
   useForm({}).post(route('tenant.portal.estimates.reject', id))
 }
 
-const formatMoney = (v) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(v ?? 0)
-const formatDate = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatMoney = (v) => new Intl.NumberFormat(intlLocale(), { style: 'currency', currency: 'PLN' }).format(v ?? 0)
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 const estStatusLabel = (s) =>
   ({
     draft: 'Szkic',

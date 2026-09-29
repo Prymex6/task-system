@@ -49,7 +49,7 @@
               </p>
               <div class="flex items-center justify-between">
                 <span v-if="deal.value" class="text-sm font-semibold text-indigo-600">
-                  {{ Number(deal.value).toLocaleString('pl-PL') }} {{ deal.currency ?? 'PLN' }}
+                  {{ Number(deal.value).toLocaleString(intlLocale()) }} {{ deal.currency ?? 'PLN' }}
                 </span>
                 <div
                   v-if="deal.assignee"
@@ -77,6 +77,7 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   stages: Array,
@@ -88,6 +89,6 @@ const showAddDeal = ref(false)
 const stageValue = (stage) => {
   const total = (stage.deals ?? []).reduce((s, d) => s + Number(d.value ?? 0), 0)
   if (!total) return ''
-  return total.toLocaleString('pl-PL') + ' PLN'
+  return total.toLocaleString(intlLocale()) + ' PLN'
 }
 </script>

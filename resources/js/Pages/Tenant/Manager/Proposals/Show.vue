@@ -171,6 +171,7 @@ const { t } = useI18n()
 import { computed } from 'vue'
 import { Link, router, useForm } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   proposal: Object,
@@ -221,9 +222,9 @@ const statusClass = (s) =>
 
 const formatMoney = (val, currency = 'PLN') => {
   if (!val) return `0,00 ${currency}`
-  return new Intl.NumberFormat('pl-PL', { style: 'currency', currency }).format(val)
+  return new Intl.NumberFormat(intlLocale(), { style: 'currency', currency }).format(val)
 }
 
-const formatDate = (d) => (d ? new Date(d).toLocaleString('pl-PL') : '—')
-const formatDateShort = (d) => (d ? new Date(d).toLocaleDateString('pl-PL') : '—')
+const formatDate = (d) => (d ? new Date(d).toLocaleString(intlLocale()) : '—')
+const formatDateShort = (d) => (d ? new Date(d).toLocaleDateString(intlLocale()) : '—')
 </script>

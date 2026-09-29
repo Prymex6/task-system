@@ -108,6 +108,7 @@ import { Link, router } from '@inertiajs/vue3'
 import ManagerLayout from '@/Layouts/ManagerLayout.vue'
 import StatusBadge from '@/Components/Manager/StatusBadge.vue'
 import Pagination from '@/Components/Pagination.vue'
+import { intlLocale } from '@/format'
 
 const props = defineProps({
   invoices: Object,
@@ -120,7 +121,7 @@ const filters = reactive({ ...props.filters })
 const apply = () => router.get(route('tenant.manager.invoices.index'), filters, { preserveState: true, replace: true })
 
 const fmt = (v) =>
-  Number(v ?? 0).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' PLN'
+  Number(v ?? 0).toLocaleString(intlLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' PLN'
 
 const isOverdue = (inv) => {
   if (!inv.due_date || inv.status === 'paid') return false
