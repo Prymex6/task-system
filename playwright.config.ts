@@ -32,6 +32,13 @@ export default defineConfig({
 
   use: {
     baseURL: TENANT_URL,
+
+    // The application registers a Workbox service worker. Left enabled it
+    // intercepts the sign-in POST before it reaches the server, so the form
+    // sits on "processing" forever and every project fails at authentication.
+    // The suite is here to exercise the application, not the offline cache.
+    serviceWorkers: 'block',
+
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

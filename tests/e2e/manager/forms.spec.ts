@@ -17,9 +17,11 @@ const FORMS: Array<{ path: string; savedUrl: RegExp }> = [
   { path: '/contracts/create', savedUrl: /\/contracts\/\d+$/ },
   { path: '/proposals/create', savedUrl: /\/proposals\/\d+$/ },
   { path: '/knowledge-base/create', savedUrl: /\/knowledge-base\/\d+$/ },
-  { path: '/webhooks/create', savedUrl: /\/webhooks\/\d+$/ },
-  { path: '/support/create', savedUrl: /\/support\/\d+$/ },
 ]
+
+// Webhooks and manager-side tickets are created from a modal on their list, so
+// neither has a /create page — the webhook routes exclude the verb outright.
+// The client portal has its own /portal/support/create, covered by that project.
 
 test.describe('Create forms', () => {
   for (const { path } of FORMS) {
