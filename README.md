@@ -12,7 +12,7 @@ down to its own MySQL database.
   <img alt="Vue 3" src="https://img.shields.io/badge/Vue-3.5-4FC08D?logo=vuedotjs&logoColor=white">
   <img alt="Inertia 2" src="https://img.shields.io/badge/Inertia-2-9553E9">
   <img alt="Tailwind 4" src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white">
-  <img alt="500 tests" src="https://img.shields.io/badge/tests-500-success">
+  <img alt="516 tests" src="https://img.shields.io/badge/tests-516-success">
   <img alt="PHPStan level 1" src="https://img.shields.io/badge/PHPStan-level%201-blue">
 </p>
 
@@ -27,10 +27,10 @@ down to its own MySQL database.
 | **Size**          | ~23k lines of PHP, ~21k of Vue                               |
 | **Surface**       | 103 controllers · 113 models · 44 services · 153 pages       |
 | **Schema**        | 120 tables across two migration sets                         |
-| **Routes**        | 477, every one reaching a method that exists                 |
-| **Tests**         | 500 PHPUnit · 33 Playwright specs                            |
+| **Routes**        | 484, every one reaching a method that exists                 |
+| **Tests**         | 516 PHPUnit · 138 Playwright                                 |
 | **Quality gates** | Pint · PHPStan level 1, no baseline · ESLint · Prettier      |
-| **Languages**     | Polish and English, 1672 catalogued strings                  |
+| **Languages**     | Polish and English, 1914 catalogued strings                  |
 
 ---
 
@@ -132,8 +132,8 @@ Nothing user-facing is written in the source. The back end hands every message t
 components call `$t()`, and the wording lives in catalogues:
 
 ```
-lang/{pl,en}/                      281 back-end keys
-resources/js/locales/{pl,en}.json  1391 front-end keys
+lang/{pl,en}/                      497 back-end keys
+resources/js/locales/{pl,en}.json  1417 front-end keys
 ```
 
 `SetLocale` reads the workspace's `language` setting, falls back to Polish, and passes the
@@ -147,9 +147,21 @@ Two of the guard tests are worth knowing about before adding a screen.
 It looks at **call sites rather than at the text**, because a language heuristic cannot tell
 "Status" or "Plan" apart from English.
 
-`test_no_polish_is_left_in_a_component` does the same for the front end, and checks for Polish
-**words** as well as Polish characters. The first version only looked for ą/ć/ę, and 79
-strings — "Nowy projekt", "Zapisz zmiany" — walked straight past it.
+`test_no_template_prints_a_literal` does the front end, and looks at **where** a string is
+rather than at what it says. A word list is not enough: "Logowanie…", "Kopiuj" and "Aktywny"
+carry no diacritic and match no keyword, so fifty-odd strings sat untranslated behind a check
+that read the text. Anything inside `{{ }}` is on screen by definition, so a literal there is
+copy — bar a badge overflow count, an avatar initial, a required-field marker and an ISO
+currency code.
+
+`test_every_message_survives_the_vue_i18n_compiler` guards the catalogues themselves. The
+message syntax reserves `@` for linked messages and `|` for plural forms, and neither fails
+loudly: an e-mail address catalogued as a placeholder threw while the page was mounting and
+rendered the entire staff panel blank. Write an `@` as `{'@'}`.
+
+Dates and money go through `resources/js/format.js`, which takes its locale from the interface
+language. Calling `Intl` with a tag written into the component is what left an English
+workspace reading Polish dates.
 
 ---
 
@@ -196,24 +208,51 @@ unless the scheduler is running:
 
 ```bash
 php artisan schedule:work    # locally
-php artisan billing:cycle    # or run the cycle by hand
+php artisan billing:cycle    # or run either by hand
+php artisan tasks:recurring
 ```
 
-`billing:cycle` walks every tenant in isolation: a failure in one is logged and the run
-carries on, because one broken workspace must not stop everyone else from being invoiced.
+Both walk every tenant in isolation: a failure in one is logged and the run carries on,
+because one broken workspace must not stop everyone else being invoiced, or stop their
+repeating tasks appearing.
 
 ---
 
 ## Tests and static analysis
 
 ```bash
-php artisan test              # 500 tests, 4601 assertions
+php artisan test              # 516 tests, 4703 assertions
 vendor/bin/pint --test        # code style
 vendor/bin/phpstan analyse    # level 1, no baseline
 npx eslint .                  # flat config
 npx prettier --check .        # formatting
-npx playwright test           # 33 end-to-end specs
+npx playwright test           # 138 end-to-end tests
 ```
+
+### The end-to-end suite
+
+Playwright drives a real browser against a real workspace, so unlike the PHPUnit suite it needs
+a server and a tenant. Its global setup runs `php artisan e2e:setup`, which creates the
+workspace at `ecommerce.localhost`, migrates it and seeds it — there is nothing to prepare by
+hand:
+
+```bash
+php artisan serve                 # the workspace answers on ecommerce.localhost:8000
+npx playwright test
+TENANT_URL=http://ecommerce.localhost:8123 LANDLORD_URL=http://localhost:8123 npx playwright test
+```
+
+The last line is how to point it somewhere else when port 8000 is taken.
+
+Two things about the environment matter. `SESSION_DOMAIN` has to be empty locally, or the
+cookie is pinned to one host, never reaches the workspace domain and every sign-in comes back
+a 419 — `.env.example` ships it that way. And the suite blocks service workers, because the
+application registers one and it intercepts the sign-in POST before it reaches the server.
+
+Selectors never match on user-facing text. The interface is bilingual, so a selector written
+against the Polish wording reports a missing button rather than a translated one the moment a
+workspace is switched to English. Links are found by `href`; controls that open a modal or post
+a form carry a `data-testid`.
 
 The suite runs against a **real MySQL database rather than SQLite**: the schema uses enum
 columns throughout, and the finance reports group with `DATE_FORMAT`, which SQLite has no
@@ -266,7 +305,7 @@ blanks the page; a page no controller renders is dead weight that reads as a fin
 
 ```
 app/
-  Console/Commands/                 billing:cycle, backups, tenant utilities
+  Console/Commands/                 billing:cycle, tasks:recurring, backups, e2e:setup
   Http/Controllers/Tenant/Manager/  the agency panel
   Http/Controllers/Tenant/Client/   the customer portal
   Http/Controllers/Landlord/        the platform panel
@@ -292,7 +331,10 @@ routes/landlord.php                 platform routes
 
 **Literal route segments come before wildcards.** `/contracts/types` has to be declared ahead
 of `/contracts/{contract}`, or Laravel matches the wildcard first and the literal path 404s.
-Three route groups were broken this way before it was spotted, so the ordering is deliberate.
+Five route groups were broken this way before it was spotted, so the ordering is deliberate.
+The last two — `/crm/deals/stages` and `/tasks/recurring` — survived a long time because the
+end-to-end tests covering them asserted only that the response was not a 500, which a 404
+clears.
 
 **`Route::resource` excludes what the controller does not implement.** A bare `resource()`
 registers `create` and `edit` whether or not anything answers them; where a screen uses a
