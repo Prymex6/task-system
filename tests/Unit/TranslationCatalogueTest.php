@@ -243,11 +243,12 @@ class TranslationCatalogueTest extends TestCase
     /**
      * Diacritics alone are not enough.
      *
-     * "Nowy Pracownik" and "Zapisz zmiany" carry none, and 79 strings sat in
-     * the components untranslated because the first version of this check
-     * only looked for ą/ć/ę. The word list is narrower than a language
-     * detector and that is the point: every word on it is Polish and is not
-     * also English, so a match is never a false positive.
+     * Plenty of Polish carries no diacritic at all, and 79 strings sat in the
+     * components untranslated because the first version of this check looked
+     * for accented characters and nothing else. The word list below is
+     * narrower than a language detector and that is the point: every word on
+     * it is Polish and is not also English, so a match is never a false
+     * positive.
      */
     private function looksPolish(string $text): bool
     {

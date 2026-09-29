@@ -33,7 +33,7 @@ class TenantMailBootstrapper implements TenancyBootstrapper
                 // Strip port and any subdomain-only parts to get root domain
                 $host = preg_replace('/:\d+$/', '', $domain); // remove port
                 $parts = explode('.', $host);
-                // Use last 2 parts as root domain (e.g. pizza.pl from test.pizza.pl)
+                // Use the last two parts as the root domain (acme.pl from studio.acme.pl)
                 $rootDomain = count($parts) >= 2
                     ? implode('.', array_slice($parts, -2))
                     : $host;
