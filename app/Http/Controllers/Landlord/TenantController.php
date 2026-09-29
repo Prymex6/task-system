@@ -21,7 +21,10 @@ class TenantController extends Controller
 {
     public function index(Request $request)
     {
-        $tenants = Tenant::with('plan:id,name')
+        // The list prints the domain each workspace answers on. Without the
+        // relation loaded the column reads an undefined value and the component
+        // throws while mounting, which renders the whole page blank.
+        $tenants = Tenant::with(['plan:id,name', 'domains:id,tenant_id,domain'])
             ->when($request->query('search'), fn ($q, $term) => $q->where('name', 'like', "%{$term}%"))
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
             ->orderByDesc('created_at')

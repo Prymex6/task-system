@@ -78,7 +78,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-500">
-                    {{ tenant.domains[0]?.domain || $t('settings.none') }}
+                    {{ tenant.domains?.[0]?.domain || $t('settings.none') }}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
