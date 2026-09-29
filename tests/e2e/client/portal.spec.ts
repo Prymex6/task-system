@@ -1,79 +1,57 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test'
 
-// Ten plik uruchamiany z storageState: client.json (zalogowany kontakt)
+test.describe('Client portal', () => {
+  test('the dashboard renders', async ({ page }) => {
+    const response = await page.goto('/portal/dashboard')
+    expect(response?.status()).toBe(200)
+    await expect(page).toHaveURL(/\/portal\/dashboard/)
+  })
 
-test.describe('Portal klienta – dashboard', () => {
-    test('E9.1.1 /portal/dashboard ładuje się poprawnie po zalogowaniu', async ({ page }) => {
-        await page.goto('/portal/dashboard');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/dashboard/);
-    });
+  test('the invoice list renders', async ({ page }) => {
+    const response = await page.goto('/portal/invoices')
+    expect(response?.status()).toBe(200)
+  })
 
-    test('E9.1.2 Dashboard zawiera widżety (projekty, faktury, tickety)', async ({ page }) => {
-        await page.goto('/portal/dashboard');
-        await page.waitForLoadState('networkidle');
-        await expect(page.locator('body')).not.toBeEmpty();
-    });
-});
+  test('the knowledge base renders', async ({ page }) => {
+    const response = await page.goto('/portal/knowledge-base')
+    expect(response?.status()).toBe(200)
+  })
 
-test.describe('Portal klienta – faktury', () => {
-    test('E9.2.1 Strona /portal/invoices ładuje się poprawnie', async ({ page }) => {
-        await page.goto('/portal/invoices');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/invoices/);
-    });
+  test('the ticket list renders', async ({ page }) => {
+    const response = await page.goto('/portal/support')
+    expect(response?.status()).toBe(200)
+  })
 
-    test('E9.2.2 Lista faktur widoczna (lub pusta) – brak błędu 500', async ({ page }) => {
-        const response = await page.goto('/portal/invoices');
-        expect(response?.status()).toBe(200);
-    });
-});
+  test('the new-ticket form is reachable', async ({ page }) => {
+    await page.goto('/portal/support/create')
+    await expect(page.locator('input[type="text"]').first()).toBeVisible()
+  })
 
-test.describe('Portal klienta – zgłoszenia supportu', () => {
-    test('E9.3.1 Strona /portal/support ładuje się poprawnie', async ({ page }) => {
-        await page.goto('/portal/support');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/support/);
-    });
+  /**
+   * The one write the portal project performs. A customer raising a ticket is
+   * the path that has to work even when nothing else in the portal does, so
+   * it is worth submitting for real rather than asserting the form renders.
+   */
+  test('a customer can raise a ticket', async ({ page }) => {
+    await page.goto('/portal/support/create')
 
-    test('E9.3.2 Formularz nowego zgłoszenia jest dostępny', async ({ page }) => {
-        await page.goto('/portal/support/create');
-        await page.waitForLoadState('networkidle');
-        // Pole subject — pierwszy input[type="text"] w formularzu
-        await expect(page.locator('input[type="text"]').first()).toBeVisible();
-    });
+    await page.locator('input[type="text"]').first().fill('Raised by the end-to-end suite')
 
-    test('E9.3.3 Wysłanie zgłoszenia z tematem i treścią → zapis i redirect', async ({ page }) => {
-        await page.goto('/portal/support/create');
-        await page.waitForLoadState('networkidle');
+    const body = page.locator('textarea').first()
+    if (await body.isVisible()) {
+      await body.fill('Submitted while checking that the portal can open a ticket.')
+    }
 
-        // Pole tematu — pierwszy input[type="text"]
-        await page.locator('input[type="text"]').first().fill('E2E Testowe zgłoszenie z portalu');
+    const priority = page.locator('select').first()
+    if (await priority.isVisible()) {
+      await priority.selectOption({ index: 1 })
+    }
 
-        // Treść — textarea
-        const bodyField = page.locator('textarea').first();
-        if (await bodyField.isVisible()) {
-            await bodyField.fill('Treść testowego zgłoszenia E2E.');
-        }
+    await page.locator('button[type="submit"]').first().click()
+    await page.waitForLoadState('networkidle')
 
-        // Wybierz priorytet jeśli jest select
-        const prioritySelect = page.locator('select').first();
-        if (await prioritySelect.isVisible()) {
-            await prioritySelect.selectOption({ index: 1 });
-        }
-
-        await page.locator('button[type="submit"]').first().click();
-        await page.waitForLoadState('networkidle');
-
-        // Po zapisie powinien być redirect na listę lub show
-        await expect(page).toHaveURL(/\/portal\/support/);
-    });
-});
-
-test.describe('Portal klienta – baza wiedzy', () => {
-    test('E9.4.1 Strona /portal/knowledge-base ładuje się poprawnie', async ({ page }) => {
-        await page.goto('/portal/knowledge-base');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/knowledge-base/);
-    });
-});
+    // Either the list or the new ticket — both mean it saved; staying on
+    // /create would mean validation sent it back.
+    await expect(page).toHaveURL(/\/portal\/support(?!\/create)/)
+  })
+})

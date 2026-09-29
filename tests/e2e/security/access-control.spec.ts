@@ -1,64 +1,47 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test'
 
-// Ten plik uruchamiany BEZ storageState (gość – niezalogowany)
+/**
+ * Runs with no session at all.
+ *
+ * A missing middleware looks identical to a working one until somebody without
+ * a session opens the page, which is why these assert the redirect rather than
+ * the page: reaching the sign-in screen is the evidence the guard fired.
+ */
 
-test.describe('Kontrola dostępu – panel managera', () => {
-    test('E10.1.1 /dashboard bez sesji → redirect na /login', async ({ page }) => {
-        await page.goto('/dashboard');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/login/);
-    });
+test.describe('A guest cannot reach the manager panel', () => {
+  for (const path of ['/dashboard', '/projects', '/finance/invoices', '/support', '/knowledge-base']) {
+    test(`${path} redirects to the sign-in page`, async ({ page }) => {
+      await page.goto(path)
+      await page.waitForLoadState('networkidle')
+      await expect(page).toHaveURL(/\/login/)
+    })
+  }
+})
 
-    test('E10.1.2 /projects bez sesji → redirect na /login', async ({ page }) => {
-        await page.goto('/projects');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/login/);
-    });
+test.describe('A guest cannot reach the client portal', () => {
+  for (const path of ['/portal/dashboard', '/portal/invoices', '/portal/support']) {
+    test(`${path} redirects to the portal sign-in page`, async ({ page }) => {
+      await page.goto(path)
+      await page.waitForLoadState('networkidle')
+      await expect(page).toHaveURL(/\/portal\/logowanie/)
+    })
+  }
+})
 
-    test('E10.1.3 /finance/invoices bez sesji → redirect na /login', async ({ page }) => {
-        await page.goto('/finance/invoices');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/login/);
-    });
+test.describe('The two guards are separate', () => {
+  /**
+   * Staff and customers authenticate against different guards, so a manager
+   * session must not open the portal. Sharing one guard would let an employee
+   * read the portal as though they were the customer.
+   */
+  test('a manager session does not open the client portal', async ({ browser }) => {
+    const context = await browser.newContext({ storageState: 'tests/e2e/.auth/manager.json' })
+    const page = await context.newPage()
 
-    test('E10.1.4 /support bez sesji → redirect na /login', async ({ page }) => {
-        await page.goto('/support');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/login/);
-    });
+    await page.goto('/portal/dashboard')
+    await page.waitForLoadState('networkidle')
+    await expect(page).toHaveURL(/\/portal\/logowanie/)
 
-    test('E10.1.5 /knowledge-base bez sesji → redirect na /login', async ({ page }) => {
-        await page.goto('/knowledge-base');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/login/);
-    });
-});
-
-test.describe('Kontrola dostępu – portal klienta', () => {
-    test('E10.2.1 /portal/dashboard bez sesji → redirect na /portal/logowanie', async ({ page }) => {
-        await page.goto('/portal/dashboard');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/logowanie/);
-    });
-
-    test('E10.2.2 /portal/invoices bez sesji → redirect na /portal/logowanie', async ({ page }) => {
-        await page.goto('/portal/invoices');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/logowanie/);
-    });
-
-    test('E10.2.3 /portal/support bez sesji → redirect na /portal/logowanie', async ({ page }) => {
-        await page.goto('/portal/support');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/logowanie/);
-    });
-});
-
-test.describe('Izolacja sesji', () => {
-    test('E10.3.1 Sesja managera nie daje dostępu do portalu klienta (różne guardy)', async ({ page, context }) => {
-        // Gość próbuje wejść do portalu → redirect
-        await page.goto('/portal/dashboard');
-        await page.waitForLoadState('networkidle');
-        await expect(page).toHaveURL(/\/portal\/logowanie/);
-    });
-});
+    await context.close()
+  })
+})
