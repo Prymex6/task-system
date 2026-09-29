@@ -7,10 +7,13 @@ test.describe('Workspaces', () => {
     await expect(page).toHaveURL(/\/admin\/tenants/)
   })
 
+  // Matched on the domain rather than the name: a machine that has run the
+  // suite before carries more than one workspace called "E2E Test Tenant", and
+  // the domain is the part e2e:setup guarantees is unique.
   test('the workspace created by e2e:setup is listed', async ({ page }) => {
     await page.goto('/admin/tenants')
     await page.waitForLoadState('networkidle')
-    await expect(page.locator('text=E2E Test Tenant')).toBeVisible()
+    await expect(page.locator('text=ecommerce.localhost').first()).toBeVisible()
   })
 
   test('the list offers a way to add a workspace', async ({ page }) => {
