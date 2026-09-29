@@ -6,7 +6,7 @@
           <h1 class="page-title">{{ $t('common.expenses') }}</h1>
           <p class="page-subtitle">{{ expenses.total }} {{ $t('common.in_total') }}</p>
         </div>
-        <button @click="showAdd = true" class="btn-primary">
+        <button @click="showAdd = true" class="btn-primary" data-testid="create-expense">
           <i class="fa-solid fa-plus"></i> {{ $t('finance.add_expense') }}
         </button>
       </div>

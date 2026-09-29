@@ -6,7 +6,7 @@
           <h1 class="page-title">{{ $t('sprints.sprints') }}</h1>
           <p class="page-subtitle">{{ $t('sprints.run_the_project_in_iterations') }}</p>
         </div>
-        <button @click="showCreate = true" class="btn-primary">
+        <button @click="showCreate = true" class="btn-primary" data-testid="create-sprint">
           <i class="fa-solid fa-plus"></i> {{ $t('sprints.new_sprint') }}
         </button>
       </div>

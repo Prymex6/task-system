@@ -3,7 +3,7 @@
     <div class="space-y-5">
       <div class="page-header">
         <h1 class="page-title">{{ $t('manager.internal_messages') }}</h1>
-        <button @click="showNew = true" class="btn-primary">
+        <button @click="showNew = true" class="btn-primary" data-testid="create-conversation">
           <i class="fa-solid fa-pen-to-square"></i> {{ $t('manager.new_message') }}
         </button>
       </div>
